@@ -1,0 +1,9 @@
+#Build files
+dist
+
+#Libs
+node_modules
+
+#Lock files
+package-lock.json
+*.lock
