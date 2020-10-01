@@ -1,0 +1,20 @@
+{
+	"name": "default",
+	"type": "postgres",
+	"host": "localhost",
+	"port": 5432,
+	"username": "postgres",
+	"password": "admin",
+	"database": "wellt",
+	"synchronize": true,
+	"logging": false,
+	"entities": [
+		 "src/main/entities/*.ts"
+	],
+	"migrations": [
+		 "src/migration/**/*.ts"
+	],
+	"subscribers": [
+		 "src/subscriber/**/*.ts"
+	]
+}
