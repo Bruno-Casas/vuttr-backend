@@ -10,7 +10,8 @@
     "build": "babel src/main --extensions \".js,.ts\" --out-dir dist --copy-files --no-copy-ignored",
     "dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only --ignore-watch node_modules --no-notify src/main/server.ts",
     "start": "node dist/server.js",
-    "test": "jest"
+    "test": "jest",
+    "coverage": "jest --coverage"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.1",
@@ -35,6 +36,7 @@
     "eslint-plugin-standard": "^4.0.1",
     "jest": "^26.0.1",
     "prettier": "^2.0.5",
+    "sqlite3": "^5.0.0",
     "supertest": "^4.0.2",
     "ts-jest": "^26.1.0",
     "ts-node-dev": "^1.0.0-pre.49",

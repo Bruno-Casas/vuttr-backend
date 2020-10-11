@@ -1,5 +1,5 @@
-import { query, Request, response, Response } from 'express';
-import { Any, Equal, getConnection, getManager, getRepository, InsertResult, ObjectLiteral, QueryBuilder, Repository, SelectQueryBuilder } from "typeorm";
+import { Request, Response } from 'express';
+import { Any, getRepository, In, Repository, SelectQueryBuilder } from "typeorm";
 import { Tag } from "@entities/Tag";
 import { Tool } from '@entities/Tool';
 
@@ -19,7 +19,7 @@ const toolControllerActions = {
 		const toolData = { title, link, description }
 
 
-		let tags = await tagRepository.find({ name: Any(tagNames) })
+		let tags = await tagRepository.find({ name: In(tagNames) })
 
 		const newTags = tagNames.filter(
 			(tagName: string) => !tags.some(tag => tag.name === tagName)
