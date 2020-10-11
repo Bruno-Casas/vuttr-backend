@@ -2,15 +2,15 @@ import { Router } from 'express'
 import { ToolController } from '@controllers/ToolController'
 
 const toolRouter = function () {
-	const router = Router();
-	const controller = new ToolController();
+  const router = Router()
+  const controller = new ToolController()
 
-	router.post("/", controller.new)
-	router.get("/", controller.getAll)
-	router.get("/:id", controller.get)
-	router.delete("/:id", controller.delete)
+  router.post('/', controller.new)
+  router.get('/', controller.getAll)
+  router.get('/:id', controller.get)
+  router.delete('/:id', controller.delete)
 
-	return router;
+  return router
 }
 
-export default toolRouter;
+export default toolRouter

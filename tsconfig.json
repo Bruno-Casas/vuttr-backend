@@ -5,7 +5,7 @@
     "lib": ["es2017"],                             
     "allowJs": true,                       
     "outDir": "./dist",                        
-    "rootDir": "./src/main",                       
+    "rootDir": "./src",                       
     "removeComments": true,                
     "typeRoots": [
       "./node_modules/@types",
@@ -22,12 +22,10 @@
       "@controllers/*": ["./src/main/controllers/*"],
       "@entities/*": ["./src/main/entities/*"],
       "@routes/*": ["./src/main/routes/*"],
-      "@config/*": ["./src/main/config/*"],
-      "@types/*": ["./src/@types/*"]
+      "@config/*": ["./src/main/config/*"]
     }
   },
   "include": [
-    "src/main/**/*",
-    "src/@types/**/*"
+    "src/**/*"
   ]
 }

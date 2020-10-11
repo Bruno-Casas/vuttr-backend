@@ -1,4 +1,4 @@
-interface ToolDTO {
+export interface ToolDTO {
     id?: number;
     title: string;
     description: string;

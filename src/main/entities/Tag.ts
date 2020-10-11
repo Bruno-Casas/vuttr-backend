@@ -1,9 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from "typeorm";
-import { Tool } from "./Tool";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm'
+import { Tool } from './Tool'
 
 @Entity()
 export class Tag {
-
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -12,5 +11,4 @@ export class Tag {
 
     @ManyToMany(type => Tool, tools => tools.tags)
     tools: Tool[]
-
 }
