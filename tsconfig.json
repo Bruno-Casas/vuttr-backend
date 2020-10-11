@@ -22,10 +22,12 @@
       "@controllers/*": ["./src/main/controllers/*"],
       "@entities/*": ["./src/main/entities/*"],
       "@routes/*": ["./src/main/routes/*"],
-      "@config/*": ["./src/main/config/*"]
+      "@config/*": ["./src/main/config/*"],
+      "@types/*": ["./src/@types/*"]
     }
   },
   "include": [
-    "src/main/**/*"
+    "src/main/**/*",
+    "src/@types/**/*"
   ]
 }

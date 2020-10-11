@@ -1,104 +1,69 @@
-import { Request, Response } from 'express';
-import { Any, getRepository, In, Repository, SelectQueryBuilder } from "typeorm";
+import { Request, Response } from "express";
+import { getRepository, SelectQueryBuilder } from "typeorm";
 import { Tag } from "@entities/Tag";
-import { Tool } from '@entities/Tool';
+import { Tool } from "@entities/Tool";
+import { ToolService } from "../services/ToolService";
+import { TagService } from "../services/TagService";
 
-let toolRepository: Repository<Tool>
-let tagRepository: Repository<Tag>
+const toolService = new ToolService();
+const tagService = new TagService();
 
-export function ToolController() {
-	toolRepository = getRepository(Tool)
-	tagRepository = getRepository(Tag)
-	return toolControllerActions;
-}
+export class ToolController {
+    async new(request: Request, response: Response): Promise<Response> {
+        const {
+            tags: tagNames,
+            title,
+            description,
+            link,
+        }: ToolDTO = request.body;
 
-const toolControllerActions = {
-	new: async (request: Request, response: Response): Promise<Response> => {
-		const { title, link, description, tags: tagNames } = request.body
+        const tags = await tagService.saveFromNames(tagNames);
 
-		const toolData = { title, link, description }
+        let tool = new Tool();
+        tool.title = title;
+        tool.description = description;
+        tool.link = link;
+        tool.tags = tags;
 
+        tool = await toolService.save(tool);
 
-		let tags = await tagRepository.find({ name: In(tagNames) })
+        return response.status(201).json(tool);
+    }
 
-		const newTags = tagNames.filter(
-			(tagName: string) => !tags.some(tag => tag.name === tagName)
-		)
+    async getAll(request: Request, response: Response): Promise<Response> {
+        const tag = request.query.tag as string;
 
-		if (newTags) {
-			let inserts = []
-			newTags.forEach(async (tagName: string) => {
-				inserts.push(tagRepository.save({ name: tagName }))
-			})
+        const tools = await toolService.list(tag);
 
-			tags.push(...(await Promise.all(inserts)))
-		}
+        const toolsDTO = tools.map(
+            (tool): ToolDTO => {
+                const { tags, ...toolData } = tool;
+                const tagNames = tags.map(({ name }) => name);
 
-		const { id: toolId } = await toolRepository.save({ ...toolData, tags })
+                return { ...toolData, tags: tagNames };
+            }
+        );
 
-		return response.status(201).json({ ...toolData, tags: tagNames, id: toolId });
-	},
+        return response.json(toolsDTO);
+    }
 
-	getAll: async (request: Request, response: Response): Promise<Response> => {
+    async get(request: Request, response: Response): Promise<Response> {
+        const toolId = Number(request.params.id);
 
+        const tool = await toolService.find(toolId);
 
-		const { tag } = request.query
+        const { tags, ...toolData } = tool;
+        const tagNames = tags.map(({ name }) => name);
 
-		let tagFilter: (queryBuider: SelectQueryBuilder<Tool>) => void
-		if (tag)
-			tagFilter = queryBuider => {
-				queryBuider.where('tags.name = :tag', { tag })
-			}
+        return response.json({ ...toolData, tags: tagNames });
+    }
 
+    async delete(request: Request, response: Response) {
+        const id = Number(request.params.id);
 
-		const tools = await toolRepository.find({
-			relations: ['tags'],
-			join: {
-				alias: 'tool',
-				innerJoin: { tags: 'tool.tags' }
-			},
-			where: tagFilter
-		})
+        await toolService.remove(id);
+        await tagService.removeOrphanTags();
 
-		const preparedTools = tools.map(tool => {
-			const { id, tags, ...modelTool } = tool
-			const tagNames = tags.map(({ name }) => name)
-
-			return { ...modelTool, tags: tagNames, id }
-		})
-
-		return response.json(preparedTools)
-	},
-
-	get: async (request: Request, response: Response): Promise<Response> => {
-
-		const toolId = Number(request.params.id);
-
-		const tool = await toolRepository.findOne(toolId, { relations: ['tags'] })
-
-		const { id, tags, ...responseTool } = tool
-		const tagNames = tags.map(({ name }) => name)
-
-
-		return response.json({ ...responseTool, tags: tagNames, id })
-	},
-
-	delete: async (request: Request, response: Response) => {
-
-		const id = Number(request.params.id)
-
-		await toolRepository.delete({id})
-
-		await tagRepository
-			.createQueryBuilder('tag')
-			.leftJoin("tag.tools", "tools")
-			.where("tools.id IS NULL")
-			.getMany()
-			.then(async ( tags ) => {
-				await tagRepository.remove(tags)
-			})
-
-		response.status(204).send()
-	}
-
+        response.status(204).send();
+    }
 }

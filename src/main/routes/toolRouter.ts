@@ -3,7 +3,7 @@ import { ToolController } from '@controllers/ToolController'
 
 const toolRouter = function () {
 	const router = Router();
-	const controller = ToolController();
+	const controller = new ToolController();
 
 	router.post("/", controller.new)
 	router.get("/", controller.getAll)
