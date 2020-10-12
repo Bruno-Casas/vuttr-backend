@@ -30,8 +30,8 @@ afterAll(async (done) => {
   done()
 })
 
-describe('Route test /tools', () => {
-  it('POST /tools', async (done) => {
+describe('Route test /tools - Tools operations', () => {
+  it('POST /tools - Register tool with new tags', async (done) => {
     const tool = {
       title: 'Test Tool',
       link: 'testtool.com',
@@ -50,7 +50,26 @@ describe('Route test /tools', () => {
     done()
   })
 
-  it('GET /tools', async (done) => {
+  it('POST /tools - Register tool with existing tags', async (done) => {
+    const tool = {
+      title: 'Test Tool',
+      link: 'testtool.com',
+      description: 'Testing tool registration',
+      tags: ['test', 'default']
+    }
+
+    const { body } = await request(app)
+      .post('/tools')
+      .send(tool)
+      .set('Content-Type', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(201)
+
+    expect(body.title).toEqual('Test Tool')
+    done()
+  })
+
+  it('GET /tools - Get all tools', async (done) => {
     const { body }: { body: Array<Tool> } = await request(app)
       .get('/tools')
       .expect('Content-Type', /json/)
@@ -61,7 +80,7 @@ describe('Route test /tools', () => {
     done()
   })
 
-  it('GET /tools with filter', async (done) => {
+  it('GET /tools - Get tools with tag', async (done) => {
     const { body }: { body: Array<Tool> } = await request(app)
       .get('/tools')
       .query({ tag: 'test' })
@@ -73,7 +92,7 @@ describe('Route test /tools', () => {
     done()
   })
 
-  it('GET /tools/:id', async (done) => {
+  it('GET /tools/:id - Get tool by id', async (done) => {
     const { body }: { body: Tool } = await request(app)
       .get('/tools/1')
       .expect('Content-Type', /json/)
@@ -84,7 +103,7 @@ describe('Route test /tools', () => {
     done()
   })
 
-  it('DELETE /tools/:id', async (done) => {
+  it('DELETE /tools/:id - Remove tool with id', async (done) => {
     request(app)
       .delete('/tools/1')
       .expect(204, done)

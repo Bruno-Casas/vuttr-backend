@@ -9,7 +9,7 @@ export class TagService {
       tagsNames
     )
 
-    if (unregisteredTagsNames) {
+    if (unregisteredTagsNames.length) {
       const insertsTags = []
       unregisteredTagsNames.forEach((tagName) => {
         insertsTags.push(tagRepository.save({ name: tagName }))
