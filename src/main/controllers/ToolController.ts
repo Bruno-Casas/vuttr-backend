@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
 
 import { Tool } from '@entities/Tool'
-import { ToolService } from '../services/ToolService'
-import { TagService } from '../services/TagService'
+import { ToolService } from '@services/ToolService'
+import { TagService } from '@services/TagService'
 import { ToolDTO } from 'src/@types/ToolDTO.ds'
 
 const toolService = new ToolService()
@@ -17,17 +17,36 @@ export class ToolController {
       link
     }: ToolDTO = request.body
 
-    const tags = await tagService.saveFromNames(tagNames)
+    try {
+      let tool = new Tool()
+      tool.title = title
+      tool.description = description
+      tool.link = link
+      tool.tags = []
 
-    let tool = new Tool()
-    tool.title = title
-    tool.description = description
-    tool.link = link
-    tool.tags = tags
+      if (Object.values(tool).some(value => value === undefined) ||
+        !Array.isArray(tagNames)) {
+        throw new Error('Invalid request body')
+      }
 
-    tool = await toolService.save(tool)
+      if (!tagNames.length) {
+        throw new Error('At least one tag is required')
+      }
 
-    return response.status(201).json(tool)
+      const tags = await tagService.saveFromNames(tagNames)
+
+      tool.tags = tags
+      tool = await toolService.save(tool)
+
+      return response.status(201).json(tool)
+    } catch (err) {
+      const applicationError = err as Error
+
+      return response.status(406).json({
+        error: true,
+        message: applicationError.message
+      })
+    }
   }
 
   async getAll (request: Request, response: Response): Promise<Response> {
@@ -51,6 +70,13 @@ export class ToolController {
     const toolId = Number(request.params.id)
 
     const tool = await toolService.find(toolId)
+
+    if (!tool) {
+      return response.status(404).json({
+        error: true,
+        message: 'Tool not found'
+      })
+    }
 
     const { tags, ...toolData } = tool
     const tagNames = tags.map(({ name }) => name)

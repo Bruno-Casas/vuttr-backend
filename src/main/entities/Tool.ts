@@ -6,13 +6,13 @@ export class Tool {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({ nullable: false })
     title: string;
 
-    @Column()
+    @Column({ nullable: false })
     link: string;
 
-    @Column()
+    @Column({ nullable: false })
     description: string;
 
     @ManyToMany(type => Tag, tags => tags.tools)

@@ -5,6 +5,10 @@ const tagRepository = getRepository(Tag)
 
 export class TagService {
   async saveFromNames (tagsNames: Array<string>) {
+    if (!tagsNames.length) {
+      return []
+    }
+
     const { okTags: tags, unregisteredTagsNames } = await this.checkTags(
       tagsNames
     )

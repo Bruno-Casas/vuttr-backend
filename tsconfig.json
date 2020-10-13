@@ -20,6 +20,7 @@
     "baseUrl": ".",
     "paths": {
       "@controllers/*": ["./src/main/controllers/*"],
+      "@services/*": ["./src/main/services/*"],
       "@entities/*": ["./src/main/entities/*"],
       "@routes/*": ["./src/main/routes/*"],
       "@config/*": ["./src/main/config/*"]

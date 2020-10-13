@@ -1,7 +1,7 @@
 import { Application } from 'express'
 import request from 'supertest'
 import { createConnection, getConnection } from 'typeorm'
-import { Tool } from '../main/entities/Tool'
+import { Tool } from '@entities/Tool'
 import { initializeDatabase } from './assets/initializeDatabase'
 
 var app: Application
@@ -31,6 +31,25 @@ afterAll(async (done) => {
 })
 
 describe('Route test /tools - Tools operations', () => {
+  it('POST /tools - Register tool with existing tags', async (done) => {
+    const tool = {
+      title: 'Test Tool',
+      link: 'testtool.com',
+      description: 'Testing tool registration',
+      tags: ['test', 'default']
+    }
+
+    const { body } = await request(app)
+      .post('/tools')
+      .send(tool)
+      .set('Content-Type', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(201)
+
+    expect(body.title).toEqual('Test Tool')
+    done()
+  })
+
   it('POST /tools - Register tool with new tags', async (done) => {
     const tool = {
       title: 'Test Tool',
@@ -50,12 +69,12 @@ describe('Route test /tools - Tools operations', () => {
     done()
   })
 
-  it('POST /tools - Register tool with existing tags', async (done) => {
+  it('POST /tools - Untagged tool registration', async (done) => {
     const tool = {
       title: 'Test Tool',
       link: 'testtool.com',
       description: 'Testing tool registration',
-      tags: ['test', 'default']
+      tags: []
     }
 
     const { body } = await request(app)
@@ -63,9 +82,27 @@ describe('Route test /tools - Tools operations', () => {
       .send(tool)
       .set('Content-Type', 'application/json')
       .expect('Content-Type', /json/)
-      .expect(201)
+      .expect(406)
 
-    expect(body.title).toEqual('Test Tool')
+    expect(body.error).toBe(true)
+    done()
+  })
+
+  it('POST /tools - Tool record missing attribute', async (done) => {
+    const tool = {
+      title: 'Test Tool',
+      description: 'Testing tool registration',
+      tags: ['test', 'tool', 'tags', 'default', 'new']
+    }
+
+    const { body } = await request(app)
+      .post('/tools')
+      .send(tool)
+      .set('Content-Type', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(406)
+
+    expect(body.error).toBe(true)
     done()
   })
 
@@ -101,6 +138,12 @@ describe('Route test /tools - Tools operations', () => {
     expect(body).toBeTruthy()
     expect(body.tags).toBeTruthy()
     done()
+  })
+
+  it('GET /tools/:id - Get inesistent tool by id', async (done) => {
+    request(app)
+      .get('/tools/100')
+      .expect(404, done)
   })
 
   it('DELETE /tools/:id - Remove tool with id', async (done) => {
