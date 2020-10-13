@@ -14,13 +14,16 @@ module.exports = {
     ['module-resolver', {
       alias: {
         '@config': './src/main/config',
-        '@models': './src/main/models',
+        '@entities': './src/main/entities',
         '@controllers': './src/main/controllers',
-        '@views': './src/main/views'
+        '@routes': './src/main/routes'
       }
-    }]
+    }],
+    'babel-plugin-transform-typescript-metadata',
+    ['@babel/plugin-proposal-decorators', { legacy: true }],
+    ['@babel/plugin-proposal-class-properties', { loose: true }]
   ],
   ignore: [
-    '**/*.spec.ts'
+    './src/tests'
   ]
 }

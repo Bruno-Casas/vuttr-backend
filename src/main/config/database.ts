@@ -1,5 +1,6 @@
 import * as dotenv from 'dotenv'
 import { ConnectionOptions } from 'typeorm'
+import { Entities } from '@entities/index'
 dotenv.config()
 
 const configuration: { dev: ConnectionOptions; prod: ConnectionOptions } = {
@@ -12,9 +13,7 @@ const configuration: { dev: ConnectionOptions; prod: ConnectionOptions } = {
     database: 'wellt',
     synchronize: true,
     logging: false,
-    entities: ['src/main/entities/*.ts'],
-    migrations: ['src/migration/**/*.ts'],
-    subscribers: ['src/subscriber/**/*.ts']
+    entities: Entities
   },
 
   prod: {
@@ -26,14 +25,12 @@ const configuration: { dev: ConnectionOptions; prod: ConnectionOptions } = {
     database: undefined,
     synchronize: true,
     logging: false,
-    entities: ['src/main/entities/*.ts'],
-    migrations: ['src/migration/**/*.ts'],
-    subscribers: ['src/subscriber/**/*.ts']
+    entities: Entities
   }
 }
 
 export function dbConfig (): ConnectionOptions {
-  const environment = process.env.ENVIRONMENT
+  const environment = process.env.ENVIRONMENT || 'dev'
 
   return configuration[environment]
 }

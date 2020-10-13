@@ -16,7 +16,7 @@ beforeAll(async () => {
     logging: false
   })
 
-  app = require('../main/app')
+  app = (await import('../main/app')).app
 })
 
 beforeEach(async () => {

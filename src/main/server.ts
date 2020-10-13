@@ -3,12 +3,12 @@ import { createConnection } from 'typeorm'
 import { dbConfig } from './config/database'
 
 dotenv.config()
-const port = process.env.SERVER_PORT
+const port = process.env.SERVER_PORT || 3000
 
 createConnection(dbConfig())
-  .then(() => {
+  .then(async () => {
     console.log('Info: Connected to the database')
-    const app = require('./app')
+    const { app } = await import('./app')
 
     app.listen(port, () => {
       console.log(`Info: Server running in port ${port}`)
