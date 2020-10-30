@@ -1,7 +1,7 @@
 import { User } from '@entities/User'
 import { getRepository } from 'typeorm'
 import * as bcrypt from 'bcrypt'
-import { HttpError } from '../errors/HttpError'
+import { HttpError } from '@errors/HttpError'
 
 const userRepository = getRepository(User)
 const saltRounds = 10

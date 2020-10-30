@@ -1,5 +1,5 @@
 import { jwtSecret } from '@config/app'
-import { Request } from '@customTypes/EraRequest'
+import { Request } from '@appTypes/Request'
 import { NextFunction, Response } from 'express'
 import { verify as JwtVerify } from 'jsonwebtoken'
 

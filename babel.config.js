@@ -13,10 +13,10 @@ module.exports = {
   plugins: [
     ['module-resolver', {
       alias: {
-        '@config': './src/main/config',
-        '@entities': './src/main/entities',
-        '@controllers': './src/main/controllers',
-        '@routes': './src/main/routes'
+        '@config': './src/app/config',
+        '@entities': './src/app/entities',
+        '@controllers': './src/app/controllers',
+        '@routes': './src/app/routes'
       }
     }],
     'babel-plugin-transform-typescript-metadata',

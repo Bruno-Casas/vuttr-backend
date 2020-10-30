@@ -2,8 +2,8 @@ import { Response } from 'express'
 import { Tool } from '@entities/Tool'
 import { ToolService } from '@services/ToolService'
 import { TagService } from '@services/TagService'
-import { ToolDTO } from '@customTypes/ToolDTO'
-import { Request } from '@customTypes/EraRequest'
+import { ToolDTO } from '@appTypes/ToolDTO'
+import { Request } from '@appTypes/Request'
 
 const toolService = new ToolService()
 const tagService = new TagService()

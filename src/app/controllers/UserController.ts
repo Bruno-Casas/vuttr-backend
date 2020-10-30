@@ -1,8 +1,8 @@
 import { Response } from 'express'
-import { UserDTO } from '@customTypes/UserDTO'
+import { UserDTO } from '@appTypes/UserDTO'
 import { User } from '@entities/User'
 import { UserService } from '@services/UserService'
-import { Request } from '@customTypes/EraRequest'
+import { Request } from '@appTypes/Request'
 import { HttpError } from '../errors/HttpError'
 
 const userService = new UserService()

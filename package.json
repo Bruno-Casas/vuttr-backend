@@ -2,13 +2,13 @@
   "name": "wellt",
   "description": "Back-end for VUTTR (Very Useful Tools to Remember)",
   "version": "1.0.0",
-  "main": "./src/main/server.ts",
+  "main": "./src/app/server.ts",
   "author": "Bruno Casas <brunocasas04@gmail.com>",
   "repository": "https://github.com/Bruno-Casas/wellt",
   "license": "WTFPL",
   "scripts": {
-    "build": "babel src/main --extensions \".js,.ts\" --out-dir dist --copy-files --no-copy-ignored",
-    "dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only --ignore-watch node_modules --no-notify src/main/server.ts",
+    "build": "babel src/app --extensions \".js,.ts\" --out-dir dist --copy-files --no-copy-ignored",
+    "dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only --ignore-watch node_modules --no-notify src/app/server.ts",
     "start": "node dist/server.js",
     "test": "jest",
     "coverage": "jest --coverage"

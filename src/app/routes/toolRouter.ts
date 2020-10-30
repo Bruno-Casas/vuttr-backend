@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { ToolController } from '@controllers/ToolController'
-import { checkJwt } from '../middlewares/checkJwt'
+import { checkJwt } from '@middlewares/checkJwt'
 
 const toolRouter = function () {
   const router = Router()
