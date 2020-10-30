@@ -9,7 +9,7 @@
     "removeComments": true,                
     "typeRoots": [
       "./node_modules/@types",
-      "./src/@types"
+      "./src/customTypes"
     ],                          
     "esModuleInterop": true,                  
     "resolveJsonModule": true,
@@ -17,13 +17,15 @@
     "emitDecoratorMetadata": true,         
     "skipLibCheck": true,                     
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
       "@controllers/*": ["./src/main/controllers/*"],
+      "@middlewares/*": ["./src/main/middlewares/*"],
       "@services/*": ["./src/main/services/*"],
       "@entities/*": ["./src/main/entities/*"],
       "@routes/*": ["./src/main/routes/*"],
-      "@config/*": ["./src/main/config/*"]
+      "@config/*": ["./src/main/config/*"],
+      "@customTypes/*": ["./src/customTypes/*"]
     }
   },
   "include": [

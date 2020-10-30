@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, ManyToOne } from 'typeorm'
 import { Tag } from '@entities/Tag'
+import { User } from '@entities/User'
 
 @Entity()
 export class Tool {
@@ -18,4 +19,7 @@ export class Tool {
     @ManyToMany(type => Tag, tags => tags.tools)
     @JoinTable()
     tags: Tag[];
+
+    @ManyToOne(() => User, user => user.tools)
+    registeredBy: User | number;
 }

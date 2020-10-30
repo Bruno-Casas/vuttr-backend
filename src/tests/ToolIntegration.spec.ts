@@ -1,34 +1,17 @@
 import { Application } from 'express'
 import request from 'supertest'
-import { createConnection, getConnection } from 'typeorm'
 import { Tool } from '@entities/Tool'
-import { initializeDatabase } from './assets/initializeDatabase'
+import * as cicle from './assets/testLifeCicleFunctions'
 
 var app: Application
+var authToken: string
 
-beforeAll(async () => {
-  await createConnection({
-    type: 'sqlite',
-    database: ':memory:',
-    dropSchema: true,
-    entities: ['src/main/entities/*.ts'],
-    synchronize: true,
-    logging: false
-  })
-
-  app = (await import('../main/app')).app
-})
-
-beforeEach(async () => {
-  await getConnection().synchronize(true)
-
-  return await initializeDatabase()
-})
-
-afterAll(async (done) => {
-  await getConnection().close()
-  done()
-})
+beforeAll(cicle.beforeAll(data => {
+  app = data.app
+  authToken = data.token
+}, true))
+beforeEach(cicle.beforeEach)
+afterAll(cicle.afterAll)
 
 describe('Route test /tools - Tools operations', () => {
   it('POST /tools - Register tool with existing tags', async (done) => {
@@ -43,6 +26,7 @@ describe('Route test /tools - Tools operations', () => {
       .post('/tools')
       .send(tool)
       .set('Content-Type', 'application/json')
+      .set('Authorization', `Bearer ${authToken}`)
       .expect('Content-Type', /json/)
       .expect(201)
 
@@ -62,6 +46,7 @@ describe('Route test /tools - Tools operations', () => {
       .post('/tools')
       .send(tool)
       .set('Content-Type', 'application/json')
+      .set('Authorization', `Bearer ${authToken}`)
       .expect('Content-Type', /json/)
       .expect(201)
 
@@ -81,6 +66,7 @@ describe('Route test /tools - Tools operations', () => {
       .post('/tools')
       .send(tool)
       .set('Content-Type', 'application/json')
+      .set('Authorization', `Bearer ${authToken}`)
       .expect('Content-Type', /json/)
       .expect(406)
 
@@ -99,6 +85,7 @@ describe('Route test /tools - Tools operations', () => {
       .post('/tools')
       .send(tool)
       .set('Content-Type', 'application/json')
+      .set('Authorization', `Bearer ${authToken}`)
       .expect('Content-Type', /json/)
       .expect(406)
 
@@ -149,6 +136,7 @@ describe('Route test /tools - Tools operations', () => {
   it('DELETE /tools/:id - Remove tool with id', async (done) => {
     request(app)
       .delete('/tools/1')
+      .set('Authorization', `Bearer ${authToken}`)
       .expect(204, done)
   })
 })

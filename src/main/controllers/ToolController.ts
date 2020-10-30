@@ -1,9 +1,9 @@
-import { Request, Response } from 'express'
-
+import { Response } from 'express'
 import { Tool } from '@entities/Tool'
 import { ToolService } from '@services/ToolService'
 import { TagService } from '@services/TagService'
-import { ToolDTO } from 'src/@types/ToolDTO.ds'
+import { ToolDTO } from '@customTypes/ToolDTO'
+import { Request } from '@customTypes/EraRequest'
 
 const toolService = new ToolService()
 const tagService = new TagService()
@@ -16,6 +16,7 @@ export class ToolController {
       description,
       link
     }: ToolDTO = request.body
+    const { userId } = request.data
 
     try {
       let tool = new Tool()
@@ -23,6 +24,7 @@ export class ToolController {
       tool.description = description
       tool.link = link
       tool.tags = []
+      tool.registeredBy = userId
 
       if (Object.values(tool).some(value => value === undefined) ||
         !Array.isArray(tagNames)) {
