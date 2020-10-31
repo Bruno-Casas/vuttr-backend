@@ -4,6 +4,8 @@ import { ToolService } from '@services/ToolService'
 import { TagService } from '@services/TagService'
 import { ToolDTO } from '@appTypes/ToolDTO'
 import { Request } from '@appTypes/Request'
+import { generatePageMetadata } from '../utils/ToolsContollerUtils'
+import { ToolsPage } from '@appTypes/ToolsPage'
 
 const toolService = new ToolService()
 const tagService = new TagService()
@@ -31,11 +33,11 @@ export class ToolController {
         throw new Error('Invalid request body')
       }
 
-      if (!tagNames.length) {
+      const tags = await tagService.saveFromNames(tagNames)
+
+      if (!tags.length) {
         throw new Error('At least one tag is required')
       }
-
-      const tags = await tagService.saveFromNames(tagNames)
 
       tool.tags = tags
       tool = await toolService.save(tool)
@@ -51,11 +53,17 @@ export class ToolController {
     }
   }
 
-  async getAll (request: Request, response: Response): Promise<Response> {
+  async getMany (request: Request, response: Response): Promise<Response> {
     const tag = request.query.tag as string
+    let page = Number.parseInt(request.query.page as string)
+    let size = Number.parseInt(request.query.size as string)
 
-    const tools = await toolService.list(tag)
+    if (page || size) {
+      page = page || 1
+      size = size || 10
+    }
 
+    const [tools, total] = await toolService.list(tag, page, size)
     const toolsDTO = tools.map(
       (tool): ToolDTO => {
         const { tags, ...toolData } = tool
@@ -64,6 +72,13 @@ export class ToolController {
         return { ...toolData, tags: tagNames }
       }
     )
+
+    let responseBody: Array<ToolDTO> | ToolsPage
+    if (total) {
+      responseBody = generatePageMetadata(page, size, total)
+      responseBody.tools = toolsDTO
+      return response.json(responseBody)
+    }
 
     return response.json(toolsDTO)
   }

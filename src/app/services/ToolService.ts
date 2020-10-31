@@ -1,5 +1,5 @@
 import { Tool } from '@entities/Tool'
-import { getRepository, SelectQueryBuilder } from 'typeorm'
+import { FindManyOptions, getRepository, SelectQueryBuilder } from 'typeorm'
 
 const toolRepository = getRepository(Tool)
 
@@ -8,7 +8,7 @@ export class ToolService {
     return await toolRepository.save(tool)
   }
 
-  async list (tag: string = '') {
+  async list (tag:string = '', page:number, size:number): Promise<[Tool[], number]> {
     let tagFilter: (queryBuider: SelectQueryBuilder<Tool>) => void
     if (tag) {
       tagFilter = (queryBuider) => {
@@ -16,16 +16,24 @@ export class ToolService {
       }
     }
 
-    const tools = await toolRepository.find({
+    const findOptions: FindManyOptions = {
       relations: ['tags'],
       join: {
         alias: 'tool',
         innerJoin: { tags: 'tool.tags' }
       },
-      where: tagFilter
-    })
+      where: tagFilter,
+      cache: true
+    }
 
-    return tools
+    if (page || size) {
+      findOptions.skip = size * (page - 1)
+      findOptions.take = size
+
+      return await toolRepository.findAndCount(findOptions)
+    }
+
+    return [await toolRepository.find(findOptions), undefined]
   }
 
   async find (id: number) {

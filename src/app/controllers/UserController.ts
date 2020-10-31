@@ -53,7 +53,7 @@ export class UserController {
       .then(() => {
         response.status(204).send()
       }).catch((err:HttpError) => {
-        response.status(err.httpCode || 500).json({
+        response.status(err.httpCode).json({
           error: true,
           message: err.message
         })

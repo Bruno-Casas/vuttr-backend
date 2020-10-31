@@ -46,6 +46,7 @@ export class UserService {
 
   async remove (id: number) {
     const user = await userRepository.findOne({ id })
+
     if (!user) {
       throw new HttpError('User not found', 404)
     }
@@ -56,14 +57,13 @@ export class UserService {
       .of(id)
       .loadOne()
 
-    user.email = ''
-    user.password = ''
-    user.active = false
-
     if (userTool) {
-      return userRepository.update(id, user)
+      user.email = null
+      user.password = null
+      user.active = false
+      await userRepository.update(id, user)
     } else {
-      return userRepository.delete(id)
+      await userRepository.delete(id)
     }
   }
 }

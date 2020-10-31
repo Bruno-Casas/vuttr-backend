@@ -1,5 +1,6 @@
 import { Application } from 'express'
 import request from 'supertest'
+import { generateTestToken } from './assets/integrationTestUtils'
 import * as cicle from './assets/testLifeCicleFunctions'
 
 var app: Application
@@ -97,11 +98,41 @@ describe('Route test /user - User operations', () => {
     done()
   })
 
-  it('DELETE /user - Delete/Disable user', async (done) => {
+  it('GET /user - Get non-existent user', async (done) => {
+    const authToken = generateTestToken(-1)
+
     request(app)
-      .delete('/tools/1')
+      .get('/user')
+      .set('authorization', `Bearer ${authToken}`)
+      .expect('Content-Type', /json/)
+      .expect(404, done)
+  })
+
+  it('DELETE /user - Delete/Disable user with tools', async (done) => {
+    request(app)
+      .delete('/user')
       .send({ password: 'Password@123' })
       .set('authorization', `Bearer ${authToken}`)
       .expect(204, done)
+  })
+
+  it('DELETE /user - Delete/Disable user without tools', async (done) => {
+    const authToken = generateTestToken(3)
+
+    request(app)
+      .delete('/user')
+      .send({ password: 'Password@123' })
+      .set('authorization', `Bearer ${authToken}`)
+      .expect(204, done)
+  })
+
+  it('DELETE /user - Delete/Disable non-existent user', async (done) => {
+    const authToken = generateTestToken(-1)
+
+    request(app)
+      .delete('/user')
+      .send({ password: 'Password@123' })
+      .set('authorization', `Bearer ${authToken}`)
+      .expect(404, done)
   })
 })

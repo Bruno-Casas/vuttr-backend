@@ -6,7 +6,7 @@ const toolRouter = function () {
   const router = Router()
   const controller = new ToolController()
 
-  router.get('/', controller.getAll)
+  router.get('/', controller.getMany)
   router.get('/:id', controller.get)
   router.use(checkJwt)
   router.post('/', controller.new)

@@ -14,9 +14,14 @@ export async function initializeDatabase () {
 
   const user2 = new User()
   user2.username = 'testUser2'
-  user2.email = ''
-  user2.password = ''
+  user2.email = null
+  user2.password = null
   user2.active = false
+
+  const user3 = new User()
+  user3.username = 'testUser3'
+  user3.email = 'user3@example.com'
+  user3.password = 'user3@example.com'
 
   const tag1 = new Tag()
   tag1.name = 'tag1'
@@ -64,7 +69,7 @@ export async function initializeDatabase () {
   tool4.registeredBy = user2
   tool4.tags = [tag4, defaultTag, testTag]
 
-  await connection.manager.save([user1, user2])
+  await connection.manager.save([user1, user2, user3])
 
   await connection.manager.save([tag1, tag2, tag3, tag4, defaultTag, testTag])
 

@@ -2,6 +2,7 @@ import { Application } from 'express'
 import request from 'supertest'
 import { Tool } from '@entities/Tool'
 import * as cicle from './assets/testLifeCicleFunctions'
+import { ToolsPage } from '@appTypes/ToolsPage'
 
 var app: Application
 var authToken: string
@@ -101,6 +102,46 @@ describe('Route test /tools - Tools operations', () => {
 
     expect(body.length).toBe(4)
     expect(body[0].tags).toBeTruthy()
+    done()
+  })
+
+  it('GET /tools - Get paginated tools', async (done) => {
+    const { body }: { body: ToolsPage} = await request(app)
+      .get('/tools')
+      .query({ page: 1, size: 2 })
+      .expect('Content-Type', /json/)
+      .expect(200)
+
+    expect(body.tools.length).toBe(2)
+    expect(body.page).toBe(1)
+    expect(body.tools[0].id).toBe(1)
+    done()
+  })
+
+  it('GET /tools - Get the first page only with the size parameter', async (done) => {
+    const { body }: { body: ToolsPage} = await request(app)
+      .get('/tools')
+      .query({ size: 2 })
+      .expect('Content-Type', /json/)
+      .expect(200)
+
+    expect(body.tools.length).toBe(2)
+    expect(body.page).toBe(1)
+    expect(body.tools[0].id).toBe(1)
+    done()
+  })
+
+  it('GET /tools - Get page with default size', async (done) => {
+    const { body }: { body: ToolsPage} = await request(app)
+      .get('/tools')
+      .query({ page: 1 })
+      .expect('Content-Type', /json/)
+      .expect(200)
+
+    expect(body.tools.length).toBe(4)
+    expect(body.page).toBe(1)
+    expect(body.size).toBe(10)
+    expect(body.tools[0].id).toBe(1)
     done()
   })
 
