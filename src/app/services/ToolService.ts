@@ -17,7 +17,7 @@ export class ToolService {
     }
 
     const findOptions: FindManyOptions = {
-      relations: ['tags'],
+      relations: ['tags', 'registeredBy'],
       join: {
         alias: 'tool',
         innerJoin: { tags: 'tool.tags' }
