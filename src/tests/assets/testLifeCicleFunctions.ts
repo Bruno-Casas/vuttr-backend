@@ -3,19 +3,12 @@ import { initializeDatabase } from './initializeDatabase'
 import { sign as jwtSing } from 'jsonwebtoken'
 import { jwtSecret } from '@config/app'
 import { Application } from 'express'
-import { Entities } from '@entities/index'
+import { dbConfig } from '@config/database'
 
 export function beforeAll (callback:(app:{app: Application, token:string}) => void,
   token:boolean = false, userId:number = 1) {
   return async (done:jest.DoneCallback) => {
-    await createConnection({
-      type: 'sqlite',
-      database: ':memory:',
-      dropSchema: true,
-      entities: Entities,
-      synchronize: true,
-      logging: false
-    })
+    await createConnection(dbConfig('test'))
     await initializeDatabase()
 
     const callBackData = {

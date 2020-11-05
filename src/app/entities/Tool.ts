@@ -1,8 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, ManyToOne } from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, ManyToOne, JoinColumn } from 'typeorm'
 import { Tag } from '@entities/Tag'
 import { User } from '@entities/User'
 
-@Entity()
+@Entity({ name: 'tools' })
 export class Tool {
     @PrimaryGeneratedColumn()
     id: number;
@@ -16,10 +16,16 @@ export class Tool {
     @Column({ nullable: false })
     description: string;
 
-    @ManyToMany(type => Tag, tags => tags.tools)
-    @JoinTable()
+    @ManyToMany(() => Tag, tags => tags.tools)
+    @JoinTable({
+      name: 'tools_tags',
+      joinColumn: { name: 'tool_id' },
+      inverseJoinColumn: { name: 'tag_id' }
+
+    })
     tags: Tag[];
 
     @ManyToOne(() => User, user => user.tools)
-    registeredBy: User | number;
+    @JoinColumn({ name: 'registered_by' })
+    registeredBy: number | User;
 }

@@ -6,7 +6,7 @@ import { sign as jwtSing } from 'jsonwebtoken'
 export class AuthService {
   async authenticate (user: User, password: string) : Promise<string> {
     return new Promise<string>((resolve, reject) => {
-      const userAuthenticated = compareHash(password, user.password)
+      const userAuthenticated = compareHash(password, String(user.password))
 
       if (userAuthenticated) {
         const token = jwtSing({ userId: user.id }, jwtSecret, { expiresIn: '24h' })

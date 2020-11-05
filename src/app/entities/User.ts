@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm'
 import { Tool } from '@entities/Tool'
 
-@Entity()
+@Entity({ name: 'users' })
 export class User {
     @PrimaryGeneratedColumn()
     id: number;
@@ -12,7 +12,7 @@ export class User {
     @Column({ unique: true, nullable: true })
     email: string;
 
-    @Column({ nullable: true })
+    @Column({ nullable: true, type: 'bytea' })
     password: string;
 
     @Column({ default: true })

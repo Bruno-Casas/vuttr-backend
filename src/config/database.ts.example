@@ -1,36 +1,54 @@
 import * as dotenv from 'dotenv'
 import { ConnectionOptions } from 'typeorm'
-import { Entities } from '@entities/index'
 dotenv.config()
 
-const configuration: { dev: ConnectionOptions; prod: ConnectionOptions } = {
-  dev: {
-    type: 'postgres',
-    host: 'localhost',
-    port: 5432,
-    username: 'postgres',
-    password: 'postgres',
-    database: 'postgres',
-    synchronize: true,
-    logging: false,
-    entities: Entities
-  },
+const entitiesDir = './src/app/entities/*ts'
+const migrationsDir = './src/migrations/*ts'
 
-  prod: {
-    type: undefined,
-    host: undefined,
-    port: null,
-    username: undefined,
-    password: undefined,
-    database: undefined,
-    synchronize: true,
-    logging: false,
-    entities: Entities
+const configuration: {
+  dev: ConnectionOptions,
+  prod?: ConnectionOptions,
+  test?: ConnectionOptions } =
+  {
+    dev: {
+      type: 'postgres',
+      host: 'localhost',
+      port: 5432,
+      username: 'postgres',
+      password: 'admin',
+      database: 'wellt',
+      logging: false,
+      migrationsRun: true
+    },
+
+    prod: {
+      type: undefined,
+      host: undefined,
+      port: null,
+      username: undefined,
+      password: undefined,
+      database: undefined,
+      synchronize: false,
+      logging: false
+    },
+
+    test: {
+      type: 'sqlite',
+      database: ':memory:',
+      dropSchema: true,
+      entities: [entitiesDir],
+      migrations: undefined,
+      synchronize: true,
+      logging: false
+    }
   }
-}
 
-export function dbConfig (): ConnectionOptions {
-  const environment = process.env.ENVIRONMENT || 'dev'
+export function dbConfig (target?:string): ConnectionOptions {
+  const environment = target || process.env.ENVIRONMENT || 'dev'
 
-  return configuration[environment]
+  return {
+    entities: [entitiesDir],
+    migrations: [migrationsDir],
+    ...configuration[environment]
+  }
 }
