@@ -1,7 +1,7 @@
-import { User } from '@entities/User'
-import { getRepository } from 'typeorm'
+import { User } from '@entities'
+import { FindOneOptions, getRepository } from 'typeorm'
 import * as bcrypt from 'bcrypt'
-import { HttpError } from '@errors/HttpError'
+import { HttpError } from '@specs/errors'
 
 const userRepository = getRepository(User)
 const saltRounds = 10
@@ -10,15 +10,11 @@ export class UserService {
   async save (user: User) {
     return new Promise<User>((resolve, reject) => {
       const { username } = user
-      const usernameReg = /^[A-Za-z0-9]+(?:[_-][A-Za-z0-9]+)*$/
 
-      if (!usernameReg.test(username)) {
-        return reject(new HttpError('Invalid username', 422))
-      }
       userRepository.findOneOrFail({ username })
         .then(existsUser => {
           if (existsUser.active) {
-            return reject(new HttpError('User already exists', 409))
+            reject(new HttpError('User already exists', 409))
           }
 
           user.id = existsUser.id
@@ -38,9 +34,10 @@ export class UserService {
     return await userRepository.findOne({ id })
   }
 
-  async findByUsernameOrEmail (username: string, email:string) {
+  async findByUsernameOrEmail (username: string, email:string, select:FindOneOptions<User>['select']) {
     return await userRepository.findOne({
-      where: [{ username }, { email }]
+      where: [{ username }, { email }],
+      select
     })
   }
 

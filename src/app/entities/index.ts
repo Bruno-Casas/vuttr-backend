@@ -1,5 +1,3 @@
-import { Tag } from '@entities/Tag'
-import { Tool } from '@entities/Tool'
-import { User } from '@entities/User'
-
-export const Entities = [Tag, Tool, User]
+export * from './Tag'
+export * from './Tool'
+export * from './User'

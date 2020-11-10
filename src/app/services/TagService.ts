@@ -1,4 +1,4 @@
-import { Tag } from '@entities/Tag'
+import { Tag } from '@entities'
 import { getRepository, In } from 'typeorm'
 
 const tagRepository = getRepository(Tag)

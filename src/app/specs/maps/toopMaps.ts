@@ -16,7 +16,6 @@ export const mapToolDtoToTool = {
 }
 
 export const mapRequestBodyToToDto = {
-  id: 'id',
   title: 'title?',
   link: 'link?',
   description: 'description?',

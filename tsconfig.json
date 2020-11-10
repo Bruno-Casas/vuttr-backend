@@ -15,14 +15,13 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": "./",
     "paths": {
-      "@controllers/*": ["./src/app/controllers/*"],
-      "@middlewares/*": ["./src/app/middlewares/*"],
-      "@services/*": ["./src/app/services/*"],
-      "@entities/*": ["./src/app/entities/*"],
-      "@appTypes/*": ["./src/types/*"],
-      "@routes/*": ["./src/app/routes/*"],
-      "@errors/*": ["./src/app/errors/*"],
-      "@config/*": ["./src/config/*"]
+      "@controllers": ["./src/app/controllers"],
+      "@middlewares": ["./src/app/middlewares"],
+      "@services": ["./src/app/services"],
+      "@entities": ["./src/app/entities"],
+      "@routes": ["./src/app/routes"],
+      "@specs/*": ["./src/app/specs/*"],
+      "@config": ["./src/config"]
     }
   },
   "include": [

@@ -1,31 +1,26 @@
-import { Response } from 'express'
-import { Tool } from '@entities/Tool'
-import { ToolService } from '@services/ToolService'
-import { TagService } from '@services/TagService'
-import { ToolDto } from '@appTypes/ToolDTO'
-import { Request } from '@appTypes/Request'
-import { ToolsPage } from '@appTypes/ToolsPage'
+import { NextFunction, Response } from 'express'
+import { Tool } from '@entities'
+import { TagService, ToolService } from '@services'
+import { Request, ToolDto } from '@specs/interfaces'
 import { merge as objectMapper } from 'object-mapper'
-import { mapRequestBodyToToDto, mapToolDtoToTool, mapToolToDto } from '../maps/ToopMaps'
+import { mapToolDtoToTool, mapToolToDto } from '@specs/maps'
+import { HttpError } from '@specs/errors'
 
 const toolService = new ToolService()
 const tagService = new TagService()
 
 export class ToolController {
-  async new (request: Request, response: Response): Promise<Response> {
-    const toolDto = objectMapper(request.body, mapRequestBodyToToDto) as ToolDto
+  async new (request: Request, response: Response, next:NextFunction): Promise<Response> {
+    const toolDto = request.body as ToolDto
     const { userId } = request.data
 
     try {
-      if (!toolDto.tags.length) {
-        throw new Error('At least one tag is required')
-      }
-
-      if (Object.values(toolDto).some(value => value === null)) {
-        throw new Error('Invalid request body')
-      }
-
       let tool = objectMapper(toolDto, mapToolDtoToTool) as Tool
+
+      if (await toolService.checkIfExists(tool)) {
+        throw new HttpError('This tool already exists', 406)
+      }
+
       tool.tags = await tagService.saveFromNames(toolDto.tags)
       tool.registeredBy = userId
 
@@ -34,16 +29,11 @@ export class ToolController {
 
       return response.status(201).json(objectMapper(tool, mapToolToDto))
     } catch (err) {
-      const applicationError = err as Error
-
-      return response.status(406).json({
-        error: true,
-        message: applicationError.message
-      })
+      next(err)
     }
   }
 
-  async getMany (request: Request, response: Response): Promise<Response> {
+  async getMany (request: Request, response: Response, next:NextFunction): Promise<Response> {
     const tag = request.query.tag as string
     let page = Number.parseInt(request.query.page as string)
     let size = Number.parseInt(request.query.size as string)
@@ -70,22 +60,19 @@ export class ToolController {
     return response.json(toolsDTO)
   }
 
-  async get (request: Request, response: Response): Promise<Response> {
+  async get (request: Request, response: Response, next:NextFunction) {
     const toolId = Number(request.params.id)
 
     const tool = await toolService.find(toolId)
 
     if (!tool) {
-      return response.status(404).json({
-        error: true,
-        message: 'Tool not found'
-      })
+      return next(new HttpError('Tool not found', 404))
     }
 
     const { tags, ...toolData } = tool
     const tagNames = tags.map(({ name }) => name)
 
-    return response.json({ ...toolData, tags: tagNames })
+    response.json({ ...toolData, tags: tagNames })
   }
 
   async delete (request: Request, response: Response) {

@@ -1,24 +1,24 @@
 import { Application } from 'express'
 import request from 'supertest'
-import { Tool } from '@entities/Tool'
-import * as cicle from './assets/testLifeCicleFunctions'
-import { ToolsPage } from '@appTypes/ToolsPage'
+import { Tool } from '@entities'
+import * as lifeCycle from './assets/testLifeCycleFunctions'
+import { ToolsPage } from '@specs/interfaces'
 
 var app: Application
 var authToken: string
 
-beforeAll(cicle.beforeAll(data => {
+beforeAll(lifeCycle.beforeAll(data => {
   app = data.app
   authToken = data.token
 }, true))
-beforeEach(cicle.beforeEach)
-afterAll(cicle.afterAll)
+beforeEach(lifeCycle.beforeEach)
+afterAll(lifeCycle.afterAll)
 
 describe('Route test /tools - Tools operations', () => {
   it('POST /tools - Register tool with existing tags', async (done) => {
     const tool = {
       title: 'Test Tool',
-      link: 'testtool.com',
+      link: 'test-tool.com',
       description: 'Testing tool registration',
       tags: ['test', 'default']
     }
@@ -38,7 +38,7 @@ describe('Route test /tools - Tools operations', () => {
   it('POST /tools - Register tool with new tags', async (done) => {
     const tool = {
       title: 'Test Tool',
-      link: 'testtool.com',
+      link: 'test-tool.com',
       description: 'Testing tool registration',
       tags: ['test', 'tool', 'tags', 'default', 'new']
     }
@@ -58,7 +58,7 @@ describe('Route test /tools - Tools operations', () => {
   it('POST /tools - Untagged tool registration', async (done) => {
     const tool = {
       title: 'Test Tool',
-      link: 'testtool.com',
+      link: 'test-tool.com',
       description: 'Testing tool registration',
       tags: []
     }
@@ -71,7 +71,7 @@ describe('Route test /tools - Tools operations', () => {
       .expect('Content-Type', /json/)
       .expect(406)
 
-    expect(body.error).toBe(true)
+    expect(body.success).toBe(false)
     done()
   })
 
@@ -88,9 +88,9 @@ describe('Route test /tools - Tools operations', () => {
       .set('Content-Type', 'application/json')
       .set('Authorization', `Bearer ${authToken}`)
       .expect('Content-Type', /json/)
-      .expect(406)
+      .expect(400)
 
-    expect(body.error).toBe(true)
+    expect(body.success).toBe(false)
     done()
   })
 
@@ -168,7 +168,7 @@ describe('Route test /tools - Tools operations', () => {
     done()
   })
 
-  it('GET /tools/:id - Get inesistent tool by id', async (done) => {
+  it('GET /tools/:id - Get nonexistent tool by id', async (done) => {
     request(app)
       .get('/tools/100')
       .expect(404, done)

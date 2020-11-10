@@ -1,14 +1,14 @@
 import { Application } from 'express'
 import request from 'supertest'
-import * as cicle from './assets/testLifeCicleFunctions'
+import * as lifeCycle from './assets/testLifeCycleFunctions'
 
 var app: Application
 
-beforeAll(cicle.beforeAll(data => {
+beforeAll(lifeCycle.beforeAll(data => {
   app = data.app
 }))
-beforeEach(cicle.beforeEach)
-afterAll(cicle.afterAll)
+beforeEach(lifeCycle.beforeEach)
+afterAll(lifeCycle.afterAll)
 
 describe('Route test /auth - Auth operations', () => {
   it('POST /auth - Authentication with username', async (done) => {
@@ -59,7 +59,7 @@ describe('Route test /auth - Auth operations', () => {
       .expect('Content-Type', /json/)
       .expect(401)
 
-    expect(body.error).toBe(true)
+    expect(body.success).toBe(false)
     done()
   })
 
@@ -67,7 +67,7 @@ describe('Route test /auth - Auth operations', () => {
     request(app)
       .get('/user')
       .set('Content-Type', 'application/json')
-      .set('authorization', 'Bearer INVALIDTOKEN')
+      .set('authorization', 'Bearer INVALID_TOKEN')
       .expect('Content-Type', /json/)
       .expect(401, done)
   })

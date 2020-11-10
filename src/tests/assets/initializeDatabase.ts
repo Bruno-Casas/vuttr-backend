@@ -1,7 +1,6 @@
-import { User } from '@entities/User'
+import { User, Tag, Tool } from '@entities'
 import { getConnection } from 'typeorm'
-import { Tag } from '@entities/Tag'
-import { Tool } from '@entities/Tool'
+
 import * as bcrypt from 'bcrypt'
 
 export async function initializeDatabase () {

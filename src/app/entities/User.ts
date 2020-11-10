@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm'
-import { Tool } from '@entities/Tool'
+import { Tool } from '@entities'
 
 @Entity({ name: 'users' })
 export class User {
@@ -12,7 +12,7 @@ export class User {
     @Column({ unique: true, nullable: true })
     email: string;
 
-    @Column({ nullable: true, type: 'bytea', select: false })
+    @Column({ nullable: true, type: 'character', length: 60, select: false })
     password: string;
 
     @Column({ default: true })

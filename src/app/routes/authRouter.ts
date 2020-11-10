@@ -1,8 +1,8 @@
 import { Router } from 'express'
-import { AuthController } from '@controllers/AuthController'
-import { checkJwt } from '@middlewares/checkJwt'
+import { AuthController } from '@controllers'
+import { checkJwt } from '@middlewares'
 
-const authRouter = function () {
+export function authRouter () {
   const router = Router()
   const controller = new AuthController()
 
@@ -11,5 +11,3 @@ const authRouter = function () {
 
   return router
 }
-
-export default authRouter

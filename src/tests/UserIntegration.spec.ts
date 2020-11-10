@@ -1,17 +1,17 @@
 import { Application } from 'express'
 import request from 'supertest'
 import { generateTestToken } from './assets/integrationTestUtils'
-import * as cicle from './assets/testLifeCicleFunctions'
+import * as lifeCycle from './assets/testLifeCycleFunctions'
 
 var app: Application
 var authToken: string
 
-beforeAll(cicle.beforeAll(data => {
+beforeAll(lifeCycle.beforeAll(data => {
   app = data.app
   authToken = data.token
 }, true))
-beforeEach(cicle.beforeEach)
-afterAll(cicle.afterAll)
+beforeEach(lifeCycle.beforeEach)
+afterAll(lifeCycle.afterAll)
 
 describe('Route test /user - User operations', () => {
   it('POST /user - Register user', async (done) => {
@@ -64,7 +64,7 @@ describe('Route test /user - User operations', () => {
       .expect('Content-Type', /json/)
       .expect(409)
 
-    expect(body.error).toBe(true)
+    expect(body.success).toBe(false)
     done()
   })
 
@@ -82,7 +82,25 @@ describe('Route test /user - User operations', () => {
       .expect('Content-Type', /json/)
       .expect(422)
 
-    expect(body.error).toBe(true)
+    expect(body.success).toBe(false)
+    done()
+  })
+
+  it('POST /user - Register user with invalid email', async (done) => {
+    const user = {
+      username: 'test User',
+      email: 'testUser-example.com',
+      password: 'Password@123'
+    }
+
+    const { body } = await request(app)
+      .post('/user')
+      .send(user)
+      .set('Content-Type', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(422)
+
+    expect(body.success).toBe(false)
     done()
   })
 

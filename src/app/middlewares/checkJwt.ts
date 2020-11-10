@@ -1,5 +1,5 @@
-import { jwtSecret } from '@config/app'
-import { Request } from '@appTypes/Request'
+import { jwtSecret } from '@config'
+import { Request } from '@specs/interfaces'
 import { NextFunction, Response } from 'express'
 import { verify as JwtVerify } from 'jsonwebtoken'
 

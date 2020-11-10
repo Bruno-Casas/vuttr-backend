@@ -25,7 +25,8 @@ export class FirstTables1604289272746 implements MigrationInterface {
         },
         {
           name: 'password',
-          type: 'bytea'
+          type: 'char',
+          length: '60'
         },
         {
           name: 'active',

@@ -1,9 +1,8 @@
 import { createConnection, getConnection } from 'typeorm'
 import { initializeDatabase } from './initializeDatabase'
 import { sign as jwtSing } from 'jsonwebtoken'
-import { jwtSecret } from '@config/app'
+import { dbConfig, jwtSecret } from '@config'
 import { Application } from 'express'
-import { dbConfig } from '@config/database'
 
 export function beforeAll (callback:(app:{app: Application, token:string}) => void,
   token:boolean = false, userId:number = 1) {

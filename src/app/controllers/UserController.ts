@@ -1,24 +1,14 @@
-import { Response } from 'express'
-import { UserDTO } from '@appTypes/UserDTO'
-import { User } from '@entities/User'
-import { UserService } from '@services/UserService'
-import { Request } from '@appTypes/Request'
-import { HttpError } from '../errors/HttpError'
+import { NextFunction, Response } from 'express'
+import { User } from '@entities'
+import { UserService } from '@services'
+import { Request } from '@specs/interfaces'
+import { HttpError } from '@specs/errors'
 
 const userService = new UserService()
 
 export class UserController {
-  async new (request: Request, response: Response) {
-    const {
-      username,
-      email,
-      password
-    }: UserDTO = request.body
-
-    const user = new User()
-    user.username = username
-    user.email = email
-    user.password = password
+  async new (request: Request, response: Response, next:NextFunction) {
+    const user = request.body as User
 
     userService.save(user)
       .then(user => {
@@ -27,36 +17,26 @@ export class UserController {
 
         response.status(201).json(user)
       })
-      .catch((err: HttpError) => {
-        response.status(err.httpCode).json({ error: true, message: err.message })
-      })
+      .catch(next)
   }
 
-  async get (request: Request, response: Response): Promise<Response> {
+  async get (request: Request, response: Response, next:NextFunction) {
     const userId = request.data.userId
     const user = await userService.find(userId)
 
     if (!user) {
-      return response.status(404).json({
-        error: true,
-        message: 'User not found'
-      })
+      return next(new HttpError('User not found', 404))
     }
 
-    return response.json(user)
+    response.json(user)
   }
 
-  async delete (request: Request, response: Response) {
+  async delete (request: Request, response: Response, next:NextFunction) {
     const userId = Number(request.data.userId)
 
     userService.remove(userId)
       .then(() => {
         response.status(204).send()
-      }).catch((err:HttpError) => {
-        response.status(err.httpCode).json({
-          error: true,
-          message: err.message
-        })
-      })
+      }).catch(next)
   }
 }

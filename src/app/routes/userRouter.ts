@@ -1,12 +1,12 @@
 import { Router } from 'express'
-import { UserController } from '@controllers/UserController'
-import { checkJwt } from '@middlewares/checkJwt'
+import { UserController } from '@controllers'
+import { checkJwt, validateUserBody } from '@middlewares'
 
-const userRouter = function () {
+export function userRouter () {
   const router = Router()
   const controller = new UserController()
 
-  router.post('/', controller.new)
+  router.post('/', validateUserBody, controller.new)
 
   router.use(checkJwt)
 
@@ -15,5 +15,3 @@ const userRouter = function () {
 
   return router
 }
-
-export default userRouter

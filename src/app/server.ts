@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv'
 import { createConnection } from 'typeorm'
-import { dbConfig } from '@config/database'
+import { dbConfig } from '@config'
 
 dotenv.config()
 const port = process.env.SERVER_PORT || 3000

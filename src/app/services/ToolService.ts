@@ -1,4 +1,4 @@
-import { Tool } from '@entities/Tool'
+import { Tool } from '@entities'
 import { FindManyOptions, getRepository, SelectQueryBuilder } from 'typeorm'
 
 const toolRepository = getRepository(Tool)
@@ -46,5 +46,10 @@ export class ToolService {
 
   async remove (id: number) {
     await toolRepository.delete({ id })
+  }
+
+  async checkIfExists (tool:Tool) {
+    const countTool = await toolRepository.count({ title: tool.title })
+    return Boolean(countTool)
   }
 }

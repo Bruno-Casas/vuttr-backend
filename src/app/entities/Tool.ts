@@ -1,6 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, ManyToOne, JoinColumn } from 'typeorm'
-import { Tag } from '@entities/Tag'
-import { User } from '@entities/User'
+import { Tag, User } from '@entities'
 
 @Entity({ name: 'tools' })
 export class Tool {
