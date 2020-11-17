@@ -13,10 +13,15 @@ module.exports = {
   plugins: [
     ['module-resolver', {
       alias: {
-        '@config': './src/app/config',
-        '@entities': './src/app/entities',
         '@controllers': './src/app/controllers',
-        '@routes': './src/app/routes'
+        '@middlewares': './src/app/middlewares',
+        '@services': './src/app/services',
+        '@entities': './src/app/entities',
+        '@routes': './src/app/routes',
+        '@specs/errors': './src/app/specs/errors',
+        '@specs/interfaces': './src/app/specs/interfaces',
+        '@specs/maps': './src/app/specs/maps',
+        '@config': './src/config'
       }
     }],
     'babel-plugin-transform-typescript-metadata',
@@ -25,5 +30,5 @@ module.exports = {
   ],
   ignore: [
     './src/tests'
-  ]
+  ],
 }

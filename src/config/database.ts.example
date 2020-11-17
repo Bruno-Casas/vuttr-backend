@@ -1,9 +1,9 @@
 import * as dotenv from 'dotenv'
 import { ConnectionOptions } from 'typeorm'
+import * as entities from '@entities'
 dotenv.config()
 
-const entitiesDir = './src/app/entities/*ts'
-const migrationsDir = './src/migrations/*ts'
+const migrationsDir = '../migrations/*'
 
 const configuration: {
   dev: ConnectionOptions,
@@ -36,7 +36,7 @@ const configuration: {
       type: 'sqlite',
       database: ':memory:',
       dropSchema: true,
-      entities: [entitiesDir],
+      entities: Object.values(entities),
       migrations: undefined,
       synchronize: true,
       logging: false
@@ -47,7 +47,7 @@ export function dbConfig (target?:string): ConnectionOptions {
   const environment = target || process.env.ENVIRONMENT || 'dev'
 
   return {
-    entities: [entitiesDir],
+    entities: Object.values(entities),
     migrations: [migrationsDir],
     ...configuration[environment]
   }
