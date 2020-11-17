@@ -12,7 +12,7 @@ export function validateToolBody (request:Request, response:Response, next:NextF
   }
 
   if (!toolDto.tags.length) {
-    return next(new HttpError('At least one tag is required', 406))
+    return next(new HttpError('At least one tag is required', 422))
   }
 
   request.body = toolDto

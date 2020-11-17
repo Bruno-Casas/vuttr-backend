@@ -5,6 +5,7 @@ import { Request, ToolDto } from '@specs/interfaces'
 import { merge as objectMapper } from 'object-mapper'
 import { mapToolDtoToTool, mapToolToDto } from '@specs/maps'
 import { HttpError } from '@specs/errors'
+import { nextTick } from 'process'
 
 const toolService = new ToolService()
 const tagService = new TagService()
@@ -69,14 +70,18 @@ export class ToolController {
       return next(new HttpError('Tool not found', 404))
     }
 
-    const { tags, ...toolData } = tool
-    const tagNames = tags.map(({ name }) => name)
-
-    response.json({ ...toolData, tags: tagNames })
+    response.json(objectMapper(tool, mapToolToDto))
   }
 
-  async delete (request: Request, response: Response) {
+  async delete (request: Request, response: Response, next:NextFunction) {
     const id = Number(request.params.id)
+
+    const tool = new Tool()
+    tool.id = id
+
+    if (!(await toolService.checkIfExists(tool))) {
+      next(new HttpError('Tool not found', 404))
+    }
 
     await toolService.remove(id)
     await tagService.removeOrphanTags()

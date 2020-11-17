@@ -69,7 +69,7 @@ describe('Route test /tools - Tools operations', () => {
       .set('Content-Type', 'application/json')
       .set('Authorization', `Bearer ${authToken}`)
       .expect('Content-Type', /json/)
-      .expect(406)
+      .expect(422)
 
     expect(body.success).toBe(false)
     done()

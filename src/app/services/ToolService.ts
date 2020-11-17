@@ -38,7 +38,7 @@ export class ToolService {
 
   async find (id: number) {
     const tool = await toolRepository.findOne(id, {
-      relations: ['tags']
+      relations: ['tags', 'registeredBy']
     })
 
     return tool
@@ -49,7 +49,12 @@ export class ToolService {
   }
 
   async checkIfExists (tool:Tool) {
-    const countTool = await toolRepository.count({ title: tool.title })
+    const countTool = await toolRepository.count({
+      where: [
+        { title: tool.title },
+        { id: tool.id }
+      ]
+    })
     return Boolean(countTool)
   }
 }

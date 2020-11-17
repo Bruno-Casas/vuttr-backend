@@ -1,0 +1,215 @@
+FORMAT: 1A
+HOST: https://api.example.com
+
+# VUTTR Backend
+
+This is an API for a VUTTR application (Very Useful Tools to Remember), 
+it is a repository for managing tools with their respective names, links, 
+descriptions and tags. This API was proposed as a back-end challenge by the 
+BossaBox platform.
+
+# Data Structures
+
+## ToolRequest (object)
++ title: Example Tool (required) - Tool name
++ link: extool.exemple (required) - Tool address
++ description: This is example description (required)  - Tool description.
++ tags: web, example, `new tool`, doc (array, required) - Tags related to tool
+
+## ToolResponse (object)
++ id: 1 (number) - Unique identifier
++ title: Example Tool - Tool name
++ link: extool.exemple - Tool address
++ description: This is example description  - Tool description.
++ tags: web, example, `new tool`, doc (array) - Tags related to tool
+
+## ToolResponseWithOwner (ToolResponse)
++ registered_by: UserName - User who registered the tool
+
+##ToolPage (object)
++ page: 1 (number) - Page index
++ size: 10 (number) - Page size
++ total: 1 (number) - Total tools registered
++ tools (array[ToolResponseWithOwner], fixed-type)
++ last_page: 1 (number) - Last page index
+
+# Group Tools
+Groups all possible operations with the tools of the repository of manager by this api.
+
+## Tool list [/tools{?tag,page,size}]
+Endpoint to manipulate tool repository of api.
+
+### List all tools [GET]
+Get a list of tools. It's possible pages the response with the page and size parameters. 
+With parameter tag is possible filter the elements of list by a common tag.
+
++ Parameters
+    + tag: example (string, optional) - Common tag filter
+    + page: 1 (number,optional) - Target page
+    + size: 5 (number,optional) - Page size
+
++ Request without params or with tag filter  (application/json)
+
++ Response 200 (application/json)
+
+    + Attributes(array[ToolResponseWithOwner], fixed-type)
+
++ Request with pagination params(application/json)
+
++ Response 200 (application/json)
+
+    + Attributes(ToolPage, fixed-type)
+
+### Create New Toll [POST]
+Create a new tool using defined body. 
+
++ Request with body (application/json)
+
+    + Headers
+
+            Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MX0.fhc3wykrAnRpcKApKhXiahxaOe8PSHatad31NuIZ0Zg
+
+    + Attributes(ToolRequest)
+
++ Response 201
+
+    + Attributes(ToolResponse)
+
++ Response 400 (application/json)
+
+    + Body
+
+            {
+                "success": false,
+                "message": "Missing required attribute"
+            }
+
++ Response 422 (application/json)
+
+    + Body
+
+            {
+                "success": false,
+                "message": "At least one tag is required"
+            }
+
+## Tool [/tools/{id}]
+Endpoint to manipulate a single tool.
+
++ Parameters
+
+    + id: 1 (required, number) - The tool ID
+
+### Get tool [GET]
+Get a single tool.
+
++ Response 200 (application/json)
+
+    + Attributes(ToolResponseWithOwner, fixed-type)
+
+### Delete a Note [DELETE]
+Delete a single tool.
+
++ Request
+    + Headers
+
+            Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MX0.fhc3wykrAnRpcKApKhXiahxaOe8PSHatad31NuIZ0Zg
+
++ Response 204
+
++ Response 404 (application/json)
+
+    + Body
+    
+            {
+                "success": false,
+                "message": "Tool not found"
+            }
+
+# Group Users
+Groups all possible operations with the users managed by this api.
+
+## User [/user]
+Endpoint to manipulate the API users.
+
+### Create New User [POST]
+Create a new user using a content body.
+
++ Request with body (application/json)
+
+    + Attributes(fixed-type)
+        + username: testUser (required) - User username
+        + email: testuser@example.com (required) - User e-mail
+        + password: userpassword(required) - User password
+    
++ Response 201
+
+    + Attributes(fixed-type)
+        + username: testUser - User username
+        + email: testuser@example.com - User e-mail
+        + id: 1 - User id
+
+### GET [GET]
+Get the current authorized user.
+
++ Request
+
+    + Headers
+
+            Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MX0.fhc3wykrAnRpcKApKhXiahxaOe8PSHatad31NuIZ0Zg
+
++ Response 200
+
+    + Attributes(fixed-type)
+        + username: testUser - User username
+        + email: testuser@example.com - User e-mail
+        + id: 1 - User id
+
+### GET [DELETE]
+Remove the current authorized user.
+
++ Request
+
+    + Headers
+
+            Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MX0.fhc3wykrAnRpcKApKhXiahxaOe8PSHatad31NuIZ0Zg
+
++ Response 204
+
++ Response 404 (application/json)
+
+    + Body
+    
+            {
+                "success": false,
+                "message": "User not found"
+            }
+
+# Group Auth
+Groups all Api authentication operations.
+
+## Auth [/auth]
+Endpoint to authenticate users.
+
+### Authorize user [POST]
+Authenticate user with username/email and password.
+
++ Request  with username (application/json)
+
+    + Attributes(fixed-type)
+        + username: testUser - User username
+        + password: userpassword - User password
+
++ Request  with email (application/json)
+
+    + Attributes(fixed-type)
+        + email: testuser@example.com - User e-mail
+        + password: userpassword - User password
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MX0.fhc3wykrAnRpcKApKhXiahxaOe8PSHatad31NuIZ0Zg"
+            }
