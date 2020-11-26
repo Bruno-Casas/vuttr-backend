@@ -1,12 +1,12 @@
 import { HttpError } from '@specs/errors'
 import { NextFunction, Request, Response } from 'express'
 import { merge as objectMapper } from 'object-mapper'
-import { mapRequestBodyToUser } from '@specs/maps'
+import { mapRequestBodyToUser } from '@specs/constants'
 import { User } from '@entities'
 
 export function validateUserBody (request:Request, response:Response, next:NextFunction) {
   const usernameReg = /^[A-Za-z0-9]+(?:[_-][A-Za-z0-9]+)*$/
-  const emailReg = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
+  const emailReg = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/
   const user = objectMapper(request.body, mapRequestBodyToUser) as User
 
   if (Object.values(user).some(value => value === null)) {

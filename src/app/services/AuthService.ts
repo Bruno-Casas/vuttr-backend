@@ -1,4 +1,4 @@
-import { jwtSecret } from '@config'
+import { config } from '@config'
 import { User } from '@entities'
 import { HttpError } from '@specs/errors'
 import { compareSync as compareHash } from 'bcrypt'
@@ -11,6 +11,6 @@ export class AuthService {
     if (!userAuthenticated) {
       throw new HttpError('Invalid password', 401)
     }
-    return jwtSing({ userId: user.id }, jwtSecret, { expiresIn: '24h' })
+    return jwtSing({ userId: user.id }, config.jwtSecret, { expiresIn: '24h' })
   }
 }

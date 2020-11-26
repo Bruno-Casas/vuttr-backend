@@ -11,8 +11,8 @@ export class ToolService {
   async list (tag:string = '', page:number, size:number): Promise<[Tool[], number]> {
     let tagFilter: (queryBuider: SelectQueryBuilder<Tool>) => void
     if (tag) {
-      tagFilter = (queryBuider) => {
-        queryBuider.where('tags.name = :tag', { tag })
+      tagFilter = (queryBuilder) => {
+        queryBuilder.where('tags.name = :tag', { tag })
       }
     }
 

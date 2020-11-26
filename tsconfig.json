@@ -21,7 +21,9 @@
       "@entities": ["./src/app/entities"],
       "@routes": ["./src/app/routes"],
       "@specs/*": ["./src/app/specs/*"],
-      "@config": ["./src/config"]
+      "@config": ["./src/app/config"],
+      "@modules/*": ["./src/modules/*"],
+      "@app": ["./src/app"]
     }
   },
   "include": [

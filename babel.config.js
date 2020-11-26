@@ -20,15 +20,14 @@ module.exports = {
         '@routes': './src/app/routes',
         '@specs/errors': './src/app/specs/errors',
         '@specs/interfaces': './src/app/specs/interfaces',
-        '@specs/maps': './src/app/specs/maps',
-        '@config': './src/config'
+        '@specs/constants': './src/app/specs/constants',
+        '@config': './src/app/config',
+        '@modules': './src/modules',
+        '@app': './src/app'
       }
     }],
     'babel-plugin-transform-typescript-metadata',
     ['@babel/plugin-proposal-decorators', { legacy: true }],
     ['@babel/plugin-proposal-class-properties', { loose: true }]
-  ],
-  ignore: [
-    './src/tests'
-  ],
+  ]
 }

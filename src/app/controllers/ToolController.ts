@@ -3,9 +3,8 @@ import { Tool } from '@entities'
 import { TagService, ToolService } from '@services'
 import { Request, ToolDto } from '@specs/interfaces'
 import { merge as objectMapper } from 'object-mapper'
-import { mapToolDtoToTool, mapToolToDto } from '@specs/maps'
+import { mapToolDtoToTool, mapToolToDto } from '@specs/constants'
 import { HttpError } from '@specs/errors'
-import { nextTick } from 'process'
 
 const toolService = new ToolService()
 const tagService = new TagService()

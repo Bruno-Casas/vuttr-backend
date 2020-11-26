@@ -1,0 +1,8 @@
+jwtSecret: default-jwtSecret
+database:
+      type: postgres
+      host: localhost
+      port: 5432
+      username: postgres
+      password: admin
+      database: 'wellt'

@@ -1,6 +1,6 @@
 import { sign as jwtSing } from 'jsonwebtoken'
-import { jwtSecret } from '@config'
+import { config } from '@config'
 
 export function generateTestToken (userId:number) {
-  return jwtSing({ userId: userId }, jwtSecret, { expiresIn: '1h' })
+  return jwtSing({ userId: userId }, config.jwtSecret, { expiresIn: '1h' })
 }

@@ -1,4 +1,4 @@
-import { jwtSecret } from '@config'
+import { config } from '@config'
 import { Request } from '@specs/interfaces'
 import { NextFunction, Response } from 'express'
 import { verify as JwtVerify } from 'jsonwebtoken'
@@ -6,7 +6,7 @@ import { verify as JwtVerify } from 'jsonwebtoken'
 export function checkJwt (request:Request, response:Response, next:NextFunction) {
   const token = request.headers.authorization.split(' ')[1]
 
-  JwtVerify(token, jwtSecret, (err, decoded:{userId:number}) => {
+  JwtVerify(token, config.jwtSecret, (err, decoded:{userId:number}) => {
     if (!err) {
       request.data = decoded
       next()

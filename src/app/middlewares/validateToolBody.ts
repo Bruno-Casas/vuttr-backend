@@ -2,7 +2,7 @@ import { ToolDto } from '@specs/interfaces'
 import { HttpError } from '@specs/errors'
 import { NextFunction, Request, Response } from 'express'
 import { merge as objectMapper } from 'object-mapper'
-import { mapRequestBodyToToDto } from '@specs/maps'
+import { mapRequestBodyToToDto } from '@specs/constants'
 
 export function validateToolBody (request:Request, response:Response, next:NextFunction) {
   const toolDto = objectMapper(request.body, mapRequestBodyToToDto) as ToolDto

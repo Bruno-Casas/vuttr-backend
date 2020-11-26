@@ -2,16 +2,17 @@
   "name": "vuttr-backend",
   "description": "Backend for VUTTR (Very Useful Tools to Remember)",
   "version": "2.0.0",
-  "main": "./src/app/server.ts",
+  "main": "./src/server.ts",
   "author": "Bruno Casas <brunocasas04@gmail.com>",
   "repository": "https://github.com/Bruno-Casas/vuttr-backend",
   "license": "WTFPL",
   "scripts": {
-    "build": "babel src --extensions \".js,.ts\" --out-dir dist --copy-files --no-copy-ignored; rm ./dist/config/*.example",
-    "dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only --ignore-watch node_modules --no-notify src/app/server.ts",
+    "build": "babel src --extensions \".js,.ts\" --out-dir dist --copy-files --no-copy-ignored",
+    "dev": "ENV=dev ts-node-dev -r tsconfig-paths/register --respawn --transpile-only --ignore-watch node_modules --no-notify $npm_package_main",
     "start": "node dist/server.js",
     "test": "jest",
-    "coverage": "jest --coverage"
+    "coverage": "jest --coverage",
+    "update-config-Schema": "typescript-json-schema --required src/app/specs/interfaces/AppConfig.ts AppConfig > src/resources/AppConfigSchema.json"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.1",
@@ -47,7 +48,8 @@
     "ts-jest": "^26.1.0",
     "ts-node-dev": "^1.0.0-pre.49",
     "tsconfig-paths": "^3.9.0",
-    "typescript": "^4.0.3"
+    "typescript": "^4.0.3",
+    "typescript-json-schema": "^0.43.0"
   },
   "dependencies": {
     "bcrypt": "^5.0.0",
@@ -58,6 +60,6 @@
     "pg": "^8.3.3",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.2.26",
-    "typescript-class-validator": "0.0.6"
+    "yaml": "^1.10.0"
   }
 }
