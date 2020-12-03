@@ -6,7 +6,7 @@ import { AppConfig } from '@specs/interfaces'
 export const config = new ConfigLoader(resolve(__dirname, '../..', 'config'), {
   jsonSchema: require('./AppConfigSchema.json') as object,
   defaultConfig: require('./defaultConfig.json') as object,
-  environment: process.env.ENV,
+  environment: process.env.ENVIRONMENT,
   setProps: [{
     path: 'database.entities',
     value: Object.values(entities)

@@ -2,7 +2,6 @@ import { parse } from 'yaml'
 import { readFileSync, existsSync } from 'fs'
 import { resolve } from 'path'
 import Ajv from 'ajv'
-import { exit } from 'process'
 import { AppConfig } from '@specs/interfaces'
 
 interface loaderOptions {
@@ -73,16 +72,12 @@ export class ConfigLoader {
   }
 
   private getConfPath () {
-    let configPath:string
+    let configPath = resolve(require.main.path, 'config.yml')
 
-    return (this.environment === 'prod')
-      ? (configPath = existsSync((configPath = resolve(require.main.path, 'config.yml')))
+    return this.environment === 'prod' && existsSync(configPath)
+      ? configPath
+      : existsSync((configPath = resolve(this.configDir, `config-${this.environment}.yml`)))
         ? configPath
-        : existsSync((configPath = resolve(this.configDir, 'config-prod.yml')))
-          ? configPath
-          : undefined)
-      : (configPath = existsSync((configPath = resolve(this.configDir, `config-${this.environment}.yml`)))
-        ? configPath
-        : undefined)
+        : resolve(this.configDir, 'config-default.yml')
   }
 }

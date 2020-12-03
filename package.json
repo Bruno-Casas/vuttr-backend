@@ -8,7 +8,7 @@
   "license": "WTFPL",
   "scripts": {
     "build": "babel src --extensions \".js,.ts\" --out-dir dist --copy-files --no-copy-ignored",
-    "dev": "ENV=dev ts-node-dev -r tsconfig-paths/register --respawn --transpile-only --ignore-watch node_modules --no-notify $npm_package_main",
+    "dev": "ENVIRONMENT=dev ts-node-dev -r tsconfig-paths/register --respawn --transpile-only --ignore-watch node_modules --no-notify $npm_package_main",
     "start": "node dist/server.js",
     "test": "jest",
     "coverage": "jest --coverage",

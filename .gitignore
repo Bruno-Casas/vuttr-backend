@@ -12,5 +12,5 @@ package-lock.json
 coverage
 
 #Config
-**/config/*.ts
-!**/config/index.ts
+src/config/*
+!src/config/config-default.yml

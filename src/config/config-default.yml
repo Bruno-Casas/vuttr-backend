@@ -1,0 +1,7 @@
+jwtSecret: default-jwtSecret
+database:
+    type: sqlite
+    database: ':memory:'
+    dropSchema: true
+    synchronize: true
+    logging: false
