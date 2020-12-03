@@ -20,7 +20,5 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: cp src/config/app.ts.example src/config/app.ts
-    - run: cp src/config/database.ts.example src/config/database.ts
     - run: npm install
     - run: npm test

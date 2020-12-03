@@ -1,6 +1,6 @@
 import { parse } from 'yaml'
 import { readFileSync, existsSync } from 'fs'
-import { resolve } from 'path'
+import { resolve, dirname } from 'path'
 import Ajv from 'ajv'
 import { AppConfig } from '@specs/interfaces'
 
@@ -72,7 +72,7 @@ export class ConfigLoader {
   }
 
   private getConfPath () {
-    let configPath = resolve(require.main.path, 'config.yml')
+    let configPath = resolve(dirname(require.main.filename), 'config.yml')
 
     return this.environment === 'prod' && existsSync(configPath)
       ? configPath

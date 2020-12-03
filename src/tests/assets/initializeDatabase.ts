@@ -20,7 +20,7 @@ export async function initializeDatabase () {
   const user3 = new User()
   user3.username = 'testUser3'
   user3.email = 'user3@example.com'
-  user3.password = 'user3@example.com'
+  user3.password = bcrypt.hashSync('Password@123', 10)
 
   const tag1 = new Tag()
   tag1.name = 'tag1'
