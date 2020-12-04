@@ -8,10 +8,10 @@ interface loaderOptions {
   environment:string,
   jsonSchema?:object,
   defaultConfig?: object
-  setProps?: [{
+  setProps?: Array<{
     path:string,
     value: any
-  }]
+  }>
 }
 
 export class ConfigLoader {
