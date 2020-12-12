@@ -1,6 +1,7 @@
 import { ConnectionOptions } from 'typeorm'
 
 export interface AppConfig {
+    port: number | string,
     jwtSecret: string,
-    database: ConnectionOptions
+    connection: ConnectionOptions
 }

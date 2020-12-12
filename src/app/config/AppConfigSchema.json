@@ -5460,7 +5460,7 @@
         }
     },
     "properties": {
-        "database": {
+        "connection": {
             "anyOf": [
                 {
                     "$ref": "#/definitions/CockroachConnectionOptions"
@@ -5515,11 +5515,18 @@
         },
         "jwtSecret": {
             "type": "string"
+        },
+        "port": {
+            "type": [
+                "string",
+                "number"
+            ]
         }
     },
     "required": [
-        "database",
-        "jwtSecret"
+        "connection",
+        "jwtSecret",
+        "port"
     ],
     "type": "object"
 }

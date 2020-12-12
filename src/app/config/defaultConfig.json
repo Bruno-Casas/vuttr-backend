@@ -1,10 +1,12 @@
 {
+  "port": 3000,
   "jwtSecret": "defaultJwtSecret",
-  "database": {
+  "connection": {
     "type": "sqlite",
     "database": ":memory:",
     "dropSchema": true,
     "synchronize": true,
-    "logging": false
+    "logging": false,
+    "migrationsRun": true
   }
 }

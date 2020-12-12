@@ -5,24 +5,26 @@ import Ajv from 'ajv'
 import { AppConfig } from '@specs/interfaces'
 
 interface loaderOptions {
-  environment:string,
-  jsonSchema?:object,
+  environment?: string,
+  jsonSchema?: object,
   defaultConfig?: object
-  setProps?: Array<{
-    path:string,
-    value: any
-  }>
+  propDefinitions?: {
+    [key: string]: {
+      env?: string,
+      value?: any
+    }
+  } | { [key: string]: any }
 }
 
 export class ConfigLoader {
-  private configDir:string
-  private environment:string
-  private validator:Ajv.ValidateFunction
-  private config:object
+  private configDir: string
+  private environment: string
+  private validator: Ajv.ValidateFunction
+  private config: object
 
-  constructor (configDir:string, options:loaderOptions) {
+  constructor (configDir: string, options?: loaderOptions) {
     this.configDir = configDir
-    this.environment = options.environment
+    this.environment = options.environment || process.env.ENVIRONMENT
 
     if (options.jsonSchema) {
       this.validator = new Ajv().compile(options.jsonSchema)
@@ -33,20 +35,26 @@ export class ConfigLoader {
       this.config = options.defaultConfig
     }
 
-    this.createConfig(options.setProps)
+    this.createConfig(options.propDefinitions)
   }
 
-  private createConfig (setProps:{path:string, value: any}[] = []) {
+  private createConfig (propDefs: loaderOptions['propDefinitions'] = {}) {
     this.loadConfig()
 
-    setProps.forEach((prop) => {
-      let propRef = this.config
-      return prop.path.split('.').forEach((elm, i, arr) => {
-        propRef = propRef[elm]
-        if (i === arr.length - 2) {
-          propRef[arr.pop()] = prop.value
-        }
+    Object.keys(propDefs).forEach(path => {
+      let targetObject = this.config
+      const pathKeys = path.split('.')
+      const prop = pathKeys.pop()
+
+      pathKeys.forEach(key => {
+        targetObject = targetObject[key] ? targetObject[key] : (targetObject[key] = {})
       })
+
+      const propDefinition = propDefs[path]
+
+      targetObject[prop] = propDefinition.env || propDefinition.value
+        ? process.env[propDefinition.env] || propDefinition.value || targetObject[prop]
+        : propDefinition
     })
   }
 
@@ -54,7 +62,7 @@ export class ConfigLoader {
     return this.config
   }
 
-  public getSpecificConfig (path:string) {
+  public getSpecificConfig (path: string) {
     return this.config[path]
   }
 

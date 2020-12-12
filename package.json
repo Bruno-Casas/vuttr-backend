@@ -12,7 +12,7 @@
     "start": "node dist/server.js",
     "test": "jest",
     "coverage": "jest --coverage",
-    "update-config-Schema": "typescript-json-schema --required src/app/specs/interfaces/AppConfig.ts AppConfig > src/resources/AppConfigSchema.json"
+    "update-config-Schema": "typescript-json-schema --required src/app/specs/interfaces/AppConfig.ts AppConfig > src/app/config/AppConfigSchema.json"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.1",

@@ -1,7 +1,9 @@
+port: 3000
 jwtSecret: default-jwtSecret
-database:
+connection:
     type: sqlite
     database: ':memory:'
     dropSchema: true
     synchronize: true
     logging: false
+    migrationsRun: true

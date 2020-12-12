@@ -9,7 +9,7 @@ export default async function initApp (startLogs: boolean = false) : Promise<App
   const environment = process.env.ENVIRONMENT || 'test'
   if (startLogs) console.log(`AppInfo: Starting application in the ${environment} environment.`)
 
-  await createConnection(config.database)
+  await createConnection(config.connection)
     .then(() => startLogs ? console.log('AppInfo: Connected to the database.') : undefined)
     .catch(err => {
       console.error(err)
