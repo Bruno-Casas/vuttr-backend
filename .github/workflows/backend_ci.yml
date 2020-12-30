@@ -7,18 +7,39 @@ on: push
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [ 12.x ]
+        node-version: [12.x]
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm install
-    - run: npm test
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Run tests
+        run: |
+          npm install
+          npm test
+
+      - name: Build project
+        run: npm run build
+
+      - name: Heroku deploy
+        uses: akhileshns/heroku-deploy@v3.8.8
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: vuttr-server-side
+          heroku_email: brunocasas04@gmail.com
+          usedocker: true
+        env:
+          APP_JWT_SECRET: ${{secrets.JWT_SECRET}}
+          TYPEORM_TYPE: ${{secrets.TYPEORM_TYPE}}
+          TYPEORM_HOST: ${{secrets.TYPEORM_HOST}}
+          TYPEORM_PORT: ${{secrets.TYPEORM_PORT}}
+          TYPEORM_USERNAME: ${{secrets.TYPEORM_USERNAME}}
+          TYPEORM_PASSWORD: ${{secrets.TYPEORM_PASSWORD}}
+          TYPEORM_DATABASE: ${{secrets.TYPEORM_DATABASE}}
