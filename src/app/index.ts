@@ -4,6 +4,7 @@ import { errorHandlerFunction } from '@middlewares'
 import { createConnection } from 'typeorm'
 import { config } from '@config'
 import { exit } from 'process'
+import { resolve } from 'path'
 
 export default async function initApp (startLogs: boolean = false) : Promise<Application> {
   const environment = process.env.ENVIRONMENT || 'test'
@@ -21,6 +22,8 @@ export default async function initApp (startLogs: boolean = false) : Promise<App
   app.use(express.json())
   app.use('/', (await import('@routes')).default)
   app.use(errorHandlerFunction)
+
+  app.use('/', express.static(resolve(__dirname, 'static')))
 
   return app
 }
