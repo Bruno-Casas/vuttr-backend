@@ -4,22 +4,20 @@ import { getRepository, In } from 'typeorm'
 const tagRepository = getRepository(Tag)
 
 export class TagService {
-  async saveFromNames (tagsNames: Array<string>) {
-    const { okTags: tags, unregisteredTagsNames } = await this.checkTags(
-      tagsNames
-    )
+  async checkAndSave (tags: Array<Tag>) {
+    const { okTags, unregisteredTags } = await this.checkTags(tags)
 
-    if (unregisteredTagsNames.length) {
-      const insertsTags = []
-      unregisteredTagsNames.forEach((tagName) => {
-        insertsTags.push(tagRepository.save({ name: tagName }))
+    if (unregisteredTags.length) {
+      const insertsTags: Array<Promise<Tag>> = []
+      unregisteredTags.forEach(tag => {
+        insertsTags.push(tagRepository.save(tag))
       })
 
-      tags.push(...(await Promise.all(insertsTags)))
+      okTags.push(...(await Promise.all(insertsTags)))
     }
 
-    tags.sort()
-    return tags
+    okTags.sort()
+    return okTags
   }
 
   async removeOrphanTags () {
@@ -34,14 +32,16 @@ export class TagService {
   }
 
   private async checkTags (
-    tags: Array<string>
-  ): Promise<{ okTags: Array<Tag>; unregisteredTagsNames: Array<string> }> {
-    const okTags = await tagRepository.find({ name: In(tags) })
+    tags: Array<Tag>
+  ): Promise<{ okTags: Array<Tag>; unregisteredTags: Array<Tag> }> {
+    const okTags = await tagRepository.find({
+      name: In(tags.map(tag => tag.name))
+    })
 
-    const unregisteredTagsNames = tags.filter(
-      (tagName) => !okTags.some((tag) => tag.name === tagName)
+    const unregisteredTags = tags.filter(
+      ({ name }) => !okTags.some(tag => tag.name === name)
     )
 
-    return { okTags, unregisteredTagsNames }
+    return { okTags, unregisteredTags }
   }
 }

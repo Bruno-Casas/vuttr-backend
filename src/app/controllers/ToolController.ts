@@ -1,39 +1,32 @@
 import { NextFunction, Response } from 'express'
 import { Tool } from '@entities'
 import { TagService, ToolService } from '@services'
-import { Request, ToolDto } from '@specs/interfaces'
-import { merge as objectMapper } from 'object-mapper'
-import { mapToolDtoToTool, mapToolToDto } from '@specs/constants'
+import { Request, ToolsPage } from '@specs/interfaces'
 import { HttpError } from '@specs/errors'
+import { classToPlain } from 'class-transformer'
 
 const toolService = new ToolService()
 const tagService = new TagService()
 
 export class ToolController {
-  async new (request: Request, response: Response, next:NextFunction): Promise<Response> {
-    const toolDto = request.body as ToolDto
+  async new (request: Request, response: Response, next:NextFunction) {
     const { userId } = request.data
+    let tool = request.body as Tool
 
-    try {
-      let tool = objectMapper(toolDto, mapToolDtoToTool) as Tool
-
-      if (await toolService.checkIfExists(tool)) {
-        throw new HttpError('This tool already exists', 406)
-      }
-
-      tool.tags = await tagService.saveFromNames(toolDto.tags)
-      tool.registeredBy = userId
-
-      tool = await toolService.save(tool)
-      delete tool.registeredBy
-
-      return response.status(201).json(objectMapper(tool, mapToolToDto))
-    } catch (err) {
-      next(err)
+    if (await toolService.checkIfExists(tool)) {
+      return next(new HttpError('This tool already exists', 406))
     }
+
+    tool.tags = await tagService.checkAndSave(tool.tags)
+    tool.registeredBy = userId
+
+    tool = await toolService.save(tool)
+    delete tool.registeredBy
+
+    return response.status(201).json(classToPlain(tool))
   }
 
-  async getMany (request: Request, response: Response, next:NextFunction): Promise<Response> {
+  async getMany (request: Request, response: Response, next:NextFunction) {
     const tag = request.query.tag as string
     let page = Number.parseInt(request.query.page as string)
     let size = Number.parseInt(request.query.size as string)
@@ -44,20 +37,19 @@ export class ToolController {
     }
 
     const [tools, total] = await toolService.list(tag, page, size)
-    const toolsDTO = tools.map(tool => objectMapper(tool, mapToolToDto) as Array<ToolDto>)
 
     if (total) {
-      const responseBody = {
+      const responseBody:ToolsPage = {
         page,
         size,
         total,
-        tools: toolsDTO,
+        tools: classToPlain(tools) as Array<Tool>,
         last_page: Math.ceil(total / size)
       }
       return response.json(responseBody)
     }
 
-    return response.json(toolsDTO)
+    return response.json(classToPlain(tools))
   }
 
   async get (request: Request, response: Response, next:NextFunction) {
@@ -69,7 +61,7 @@ export class ToolController {
       return next(new HttpError('Tool not found', 404))
     }
 
-    response.json(objectMapper(tool, mapToolToDto))
+    response.json(classToPlain(tool))
   }
 
   async delete (request: Request, response: Response, next:NextFunction) {
@@ -79,7 +71,7 @@ export class ToolController {
     tool.id = id
 
     if (!(await toolService.checkIfExists(tool))) {
-      next(new HttpError('Tool not found', 404))
+      return next(new HttpError('Tool not found', 404))
     }
 
     await toolService.remove(id)

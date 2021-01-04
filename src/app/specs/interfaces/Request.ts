@@ -1,5 +1,5 @@
 import { Request as ExpressRequest } from 'express'
 
 export interface Request extends ExpressRequest {
-            data: {userId: number}
-        }
+    data: {userId: number}
+}

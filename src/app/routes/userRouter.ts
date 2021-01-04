@@ -1,12 +1,14 @@
 import { Router } from 'express'
 import { UserController } from '@controllers'
-import { checkJwt, validateUserBody } from '@middlewares'
+import { bodyPreparer, checkJwt } from '@middlewares'
+import { User } from '@entities'
 
 export function userRouter () {
   const router = Router()
   const controller = new UserController()
+  const preparer = bodyPreparer(User)
 
-  router.post('/', validateUserBody, controller.new)
+  router.post('/', preparer, controller.new)
 
   router.use(checkJwt)
 

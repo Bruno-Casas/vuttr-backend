@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm'
 import { Tool } from '@entities'
+import { IsNotEmpty } from 'class-validator'
 
 @Entity({ name: 'tags' })
 export class Tag {
@@ -7,6 +8,7 @@ export class Tag {
     id: number;
 
     @Column({ unique: true })
+    @IsNotEmpty()
     name: string;
 
     @ManyToMany(type => Tool, tools => tools.tags)
