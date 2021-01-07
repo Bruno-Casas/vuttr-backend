@@ -13,6 +13,7 @@ export function userRouter () {
   router.use(checkJwt)
 
   router.get('/', controller.get)
+  router.put('/', preparer, controller.update)
   router.delete('/', controller.delete)
 
   return router

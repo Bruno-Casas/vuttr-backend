@@ -31,6 +31,17 @@ export class UserController {
     response.json(user)
   }
 
+  async update (request: Request, response: Response, next:NextFunction) {
+    const user = request.body as User
+    const userId = Number(request.data.userId)
+
+    userService.update(userId, user)
+      .then(() => {
+        response.status(204).send()
+      })
+      .catch(next)
+  }
+
   async delete (request: Request, response: Response, next:NextFunction) {
     const userId = Number(request.data.userId)
 

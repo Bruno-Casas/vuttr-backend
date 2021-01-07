@@ -157,7 +157,7 @@ describe('Route test /tools - Tools operations', () => {
     done()
   })
 
-  it('GET /tools/:id - Get tool by id', async (done) => {
+  it('GET /tools/{Id} - Get tool by id', async (done) => {
     const { body }: { body: Tool } = await request(app)
       .get('/tools/1')
       .expect('Content-Type', /json/)
@@ -168,13 +168,13 @@ describe('Route test /tools - Tools operations', () => {
     done()
   })
 
-  it('GET /tools/:id - Get nonexistent tool by id', async (done) => {
+  it('GET /tools/{Id} - Get nonexistent tool by id', async (done) => {
     request(app)
       .get('/tools/100')
       .expect(404, done)
   })
 
-  it('DELETE /tools/:id - Remove tool with id', async (done) => {
+  it('DELETE /tools/{Id} - Remove tool with id', async (done) => {
     request(app)
       .delete('/tools/1')
       .set('Authorization', `Bearer ${authToken}`)

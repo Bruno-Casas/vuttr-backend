@@ -153,4 +153,26 @@ describe('Route test /user - User operations', () => {
       .set('authorization', `Bearer ${authToken}`)
       .expect(404, done)
   })
+
+  it('PATCH /user/{Id} - Register user with invalid email', async (done) => {
+    const user = {
+      username: 'Ignored',
+      email: 'updated@example.com',
+      password: 'Updated@123'
+    }
+
+    await request(app)
+      .put('/user')
+      .send(user)
+      .set('Content-Type', 'application/json')
+      .set('authorization', `Bearer ${authToken}`)
+      .expect(204)
+
+    const { body } = await request(app)
+      .get('/user')
+      .set('authorization', `Bearer ${authToken}`)
+
+    expect(body.email).toBe('updated@example.com')
+    done()
+  })
 })

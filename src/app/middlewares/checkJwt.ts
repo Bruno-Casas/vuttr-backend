@@ -1,9 +1,13 @@
 import { config } from '@config'
+import { HttpError } from '@specs/errors'
 import { Request } from '@specs/interfaces'
 import { NextFunction, Response } from 'express'
 import { verify as JwtVerify } from 'jsonwebtoken'
 
 export function checkJwt (request:Request, response:Response, next:NextFunction) {
+  if (!request.headers.authorization) {
+    return next(new HttpError('Missing token', 403))
+  }
   const token = request.headers.authorization.split(' ')[1]
 
   JwtVerify(token, config.jwtSecret, (err, decoded:{userId:number}) => {
