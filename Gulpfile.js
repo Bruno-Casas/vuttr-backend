@@ -4,7 +4,7 @@ const run = require("gulp-run-command").default
 const json = require('./package.json')
 
 function build (cb) {
-  gulp.src('src/**/*')
+  gulp.src(['src/**/*', '!src/tests/**'])
     .pipe(simpleTypescript())
     .pipe(gulp.dest('dist'))
   cb()

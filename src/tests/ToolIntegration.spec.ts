@@ -180,4 +180,27 @@ describe('Route test /tools - Tools operations', () => {
       .set('Authorization', `Bearer ${authToken}`)
       .expect(204, done)
   })
+
+  it('PUT /tools/{id} - Update tool', async (done) => {
+    const tool = {
+      title: 'Tool 1',
+      link: 'test-tool.update.com',
+      description: 'Testing tool update',
+      tags: ['test', 'default', 'updated']
+    }
+
+    await request(app)
+      .put('/tools/1')
+      .send(tool)
+      .set('Content-Type', 'application/json')
+      .set('Authorization', `Bearer ${authToken}`)
+      .expect(204)
+
+    const { body } = await request(app)
+      .get('/tools/1')
+
+    expect(body.link).toEqual('test-tool.update.com')
+    expect(body.tags).toContain('updated')
+    done()
+  })
 })

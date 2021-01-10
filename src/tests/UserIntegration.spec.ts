@@ -154,7 +154,7 @@ describe('Route test /user - User operations', () => {
       .expect(404, done)
   })
 
-  it('PATCH /user/{Id} - Register user with invalid email', async (done) => {
+  it('PUT /user/{Id} - Update user', async (done) => {
     const user = {
       username: 'Ignored',
       email: 'updated@example.com',

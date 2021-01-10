@@ -64,6 +64,19 @@ export class ToolController {
     response.json(classToPlain(tool))
   }
 
+  async update (request: Request, response: Response, next:NextFunction) {
+    const tool = request.body as Tool
+    const toolId = Number(request.data.userId)
+
+    tool.tags = await tagService.checkAndSave(tool.tags)
+
+    toolService.update(toolId, tool)
+      .then(() => {
+        response.status(204).send()
+      })
+      .catch(next)
+  }
+
   async delete (request: Request, response: Response, next:NextFunction) {
     const id = Number(request.params.id)
 

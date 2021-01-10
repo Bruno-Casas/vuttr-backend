@@ -12,6 +12,7 @@ export function toolRouter () {
   router.get('/:id', controller.get)
   router.use(checkJwt)
   router.post('/', preparer, controller.new)
+  router.put('/:id', preparer, controller.update)
   router.delete('/:id', controller.delete)
 
   return router

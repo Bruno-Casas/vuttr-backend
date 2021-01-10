@@ -1,4 +1,5 @@
 import { Tool } from '@entities'
+import { HttpError } from '@specs/errors'
 import { FindManyOptions, getRepository, SelectQueryBuilder } from 'typeorm'
 
 const toolRepository = getRepository(Tool)
@@ -42,6 +43,23 @@ export class ToolService {
     })
 
     return tool
+  }
+
+  async update (id: number, tool: Tool) {
+    const targetTool = await toolRepository.findOne({ id })
+
+    if (!targetTool) {
+      throw new HttpError('Tool not found', 404)
+    }
+
+    const { title } = await toolRepository.findOne({ title: tool.title })
+    if (title !== tool.title) {
+      throw new HttpError('Title not available', 409)
+    }
+
+    tool.id = id
+
+    return toolRepository.save(tool)
   }
 
   async remove (id: number) {
