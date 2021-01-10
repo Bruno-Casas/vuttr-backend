@@ -111,8 +111,8 @@ npm run build:docker
 
 ---
 
-![BrunoCasas avatar](https://avatars3.githubusercontent.com/u/32437831?s=100&u=552d37e03609b7a45acad5ce3c5c90cc74950df0&v=4)
-[Bruno Casas](https://github.com/Bruno-Casas)
+![BrunoCasas avatar](https://avatars3.githubusercontent.com/u/32437831?s=100&u=552d37e03609b7a45acad5ce3c5c90cc74950df0&v=4)  
+[Bruno Casas](https://github.com/Bruno-Casas)  
 With a whim by Bruno Casas! :smile:
 
 [![Linkedin Badge](https://img.shields.io/badge/-Bruno_Casas-blue?logo=Linkedin&logoColor=white)](https://www.linkedin.com/in/brunocasas/)&emsp;[![Gmail Badge](https://img.shields.io/badge/-brunocasas04@gmail.com-red?logo=Gmail&logoColor=white)](mailto:brunocasas04@gmail.com)
