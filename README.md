@@ -28,13 +28,11 @@ This API was proposed as a back-end challenge by the [BossaBox](https://bossabox
 
 ### Features
 
-- [x] Users registration
+- [x] CRUD for users
+- [x] CRUD for tools
 - [x] User authentication and authorization
-- [x] Tools registration
-- [x] List of tools
 - [x] List of tools with filters
-- [ ] Users change
-- [ ] Tools change
+- [x] Allows pagination of the tool list
 - [x] Easy deploy with containers
 
 ### :hammer_and_wrench: Technologies

@@ -60,7 +60,7 @@ With parameter tag is possible filter the elements of list by a common tag.
 
     + Attributes(ToolPage, fixed-type)
 
-### Create New Toll [POST]
+### Create New Tool [POST]
 Create a new tool using defined body. 
 
 + Request with body (application/json)
@@ -107,6 +107,46 @@ Get a single tool.
 
     + Attributes(ToolResponseWithOwner, fixed-type)
 
+### Update Tool [PUT]
+Update tool using defined body. 
+
++ Request with body (application/json)
+
+    + Headers
+
+            Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MX0.fhc3wykrAnRpcKApKhXiahxaOe8PSHatad31NuIZ0Zg
+
+    + Attributes(ToolRequest)
+
++ Response 204
+
++ Response 404 (application/json)
+
+    + Body
+    
+            {
+                "success": false,
+                "message": "Tool not found"
+            }
+
++ Response 400 (application/json)
+
+    + Body
+
+            {
+                "success": false,
+                "message": "Missing required attribute"
+            }
+
++ Response 422 (application/json)
+
+    + Body
+
+            {
+                "success": false,
+                "message": "At least one tag is required"
+            }
+
 ### Delete a Note [DELETE]
 Delete a single tool.
 
@@ -149,7 +189,7 @@ Create a new user using a content body.
         + email: testuser@example.com - User e-mail
         + id: 1 - User id
 
-### GET [GET]
+### Get user by token id [GET]
 Get the current authorized user.
 
 + Request
@@ -165,7 +205,7 @@ Get the current authorized user.
         + email: testuser@example.com - User e-mail
         + id: 1 - User id
 
-### GET [DELETE]
+### Delete user by token id [DELETE]
 Remove the current authorized user.
 
 + Request
@@ -174,6 +214,38 @@ Remove the current authorized user.
 
             Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MX0.fhc3wykrAnRpcKApKhXiahxaOe8PSHatad31NuIZ0Zg
 
++ Response 204
+
++ Response 404 (application/json)
+
+    + Body
+    
+            {
+                "success": false,
+                "message": "User not found"
+            }
+
+## Tool [/user/{id}]
+Endpoint to manipulate a single user.
+
++ Parameters
+
+    + id: 1 (required, number) - The user ID
+
+### Update User [PUT]
+Update user using a content body.
+
++ Request with body (application/json)
+
+    + Headers
+
+            Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MX0.fhc3wykrAnRpcKApKhXiahxaOe8PSHatad31NuIZ0Zg
+
+    + Attributes(fixed-type)
+        + username: NewUsername (optional) - User username
+        + email: newemail@example.com (optional) - User e-mail
+        + password: newpassword(optional) - User password
+    
 + Response 204
 
 + Response 404 (application/json)
